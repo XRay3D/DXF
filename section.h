@@ -6,7 +6,7 @@
 #include <QVector>
 
 struct Entities {
-    Entities() {}
+    Entities() { }
     enum ent {
         //        3DFACE,
         //        3DSOLID,
@@ -87,7 +87,9 @@ struct Section {
     Q_GADGET
     Q_ENUM(sec)
 };
-
+///////////////////////////////////////
+/// \brief The SectionHEADER struct
+///
 struct SectionHEADER : Section {
     SectionHEADER(const QVector<CodeData>& data)
         : Section(data)
@@ -98,7 +100,9 @@ struct SectionHEADER : Section {
     void parse() override;
     QMap<QString, QMap<int, QVariant>> hData;
 };
-
+///////////////////////////////////////
+/// \brief The SectionCLASSES struct
+///
 struct SectionCLASSES : Section {
     SectionCLASSES(const QVector<CodeData>& data)
         : Section(data)
@@ -106,8 +110,11 @@ struct SectionCLASSES : Section {
     }
     virtual ~SectionCLASSES() = default;
     // Section interface
-    void parse() override {}
+    void parse() override { }
 };
+///////////////////////////////////////
+/// \brief The SectionTABLES struct
+///
 struct SectionTABLES : Section {
     SectionTABLES(const QVector<CodeData>& data)
         : Section(data)
@@ -116,7 +123,11 @@ struct SectionTABLES : Section {
     virtual ~SectionTABLES() = default;
     // Section interface
     void parse() override;
+    QVector<QVector<CodeData>> tables;
 };
+///////////////////////////////////////
+/// \brief The SectionBLOCKS struct
+///
 struct SectionBLOCKS : Section {
     SectionBLOCKS(const QVector<CodeData>& data)
         : Section(data)
@@ -124,8 +135,11 @@ struct SectionBLOCKS : Section {
     }
     virtual ~SectionBLOCKS() = default;
     // Section interface
-    void parse() override {}
+    void parse() override { }
 };
+///////////////////////////////////////
+/// \brief The SectionENTITIES struct
+///
 struct SectionENTITIES : Section {
     SectionENTITIES(const QVector<CodeData>& data)
         : Section(data)
@@ -133,8 +147,11 @@ struct SectionENTITIES : Section {
     }
     virtual ~SectionENTITIES() = default;
     // Section interface
-    void parse() override {}
+    void parse() override { }
 };
+///////////////////////////////////////
+/// \brief The SectionOBJECTS struct
+///
 struct SectionOBJECTS : Section {
     SectionOBJECTS(const QVector<CodeData>& data)
         : Section(data)
@@ -142,8 +159,11 @@ struct SectionOBJECTS : Section {
     }
     virtual ~SectionOBJECTS() = default;
     // Section interface
-    void parse() override {}
+    void parse() override { }
 };
+///////////////////////////////////////
+/// \brief The SectionTHUMBNAILIMAGE struct
+///
 struct SectionTHUMBNAILIMAGE : Section {
     SectionTHUMBNAILIMAGE(const QVector<CodeData>& data)
         : Section(data)
@@ -151,5 +171,5 @@ struct SectionTHUMBNAILIMAGE : Section {
     }
     virtual ~SectionTHUMBNAILIMAGE() = default;
     // Section interface
-    void parse() override {}
+    void parse() override { }
 };

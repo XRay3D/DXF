@@ -5,13 +5,6 @@
 
 QTextStream DXF::in;
 
-QDebug operator<<(QDebug debug, const CodeData& c)
-{
-    QDebugStateSaver saver(debug);
-    debug.nospace() << "\rDC(" << c.code << ", " << c.rawVal << ", " << c.type << ')';
-    return debug;
-}
-
 DXF::DXF(QObject* parent)
     : QObject(parent)
 {
@@ -24,9 +17,9 @@ DXF::~DXF() { qDeleteAll(sections); }
 // имя объекта в этом разделе и список кодов, разделенных запятыми.
 
 void DXF::read(const QString& fileName,
-    QString strSection,
-    QString strObject,
-    QString strCodeList)
+    QString /*strSection*/,
+    QString /*strObject*/,
+    QString /*strCodeList*/)
 {
     //    Open dxfFile For Input As #1
     file.setFileName(fileName);
@@ -49,31 +42,38 @@ void DXF::read(const QString& fileName,
         switch (Section ::key(codes.last().rawVal)) {
         case Section::HEADER:
             sections << new SectionHEADER(codes);
+            sections.last()->parse();
             break;
         case Section::CLASSES:
             sections << new SectionCLASSES(codes);
+            sections.last()->parse();
             break;
         case Section::TABLES:
             sections << new SectionTABLES(codes);
+            sections.last()->parse();
             break;
         case Section::BLOCKS:
             sections << new SectionBLOCKS(codes);
+            sections.last()->parse();
             break;
         case Section::ENTITIES:
             sections << new SectionENTITIES(codes);
+            sections.last()->parse();
             break;
         case Section::OBJECTS:
             sections << new SectionOBJECTS(codes);
+            sections.last()->parse();
             break;
         case Section::THUMBNAILIMAGE:
             sections << new SectionTHUMBNAILIMAGE(codes);
+            sections.last()->parse();
             break;
         default:
             //throw codes.last().rawVal;
             break;
         }
-        if (!sections.isEmpty() && sections.last()->data.size() < 3)
-            sections.last()->parse();
+        //        if (!sections.isEmpty() && sections.last()->data.size() < 3)
+        //            sections.last()->parse();
         codes << ReadCodes();
     }
     //    // Получите первую пару код / значение

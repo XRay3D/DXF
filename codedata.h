@@ -1,8 +1,17 @@
 #pragma once
 
+#include <QDebug>
 #include <QObject>
 
 struct CodeData {
+
+    friend QDebug operator<<(QDebug debug, const CodeData& c)
+    {
+        QDebugStateSaver saver(debug);
+        debug.nospace() << "DC(" << c.code << ", " << c.rawVal << ", " << c.type << ')';
+        return debug;
+    }
+
     enum Type {
         String,
         Double,

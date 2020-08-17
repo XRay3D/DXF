@@ -59,7 +59,6 @@ struct Entities {
 };
 
 struct Section {
-
     friend QDebug operator<<(QDebug debug, const Section& c)
     {
         QDebugStateSaver saver(debug);
@@ -90,7 +89,7 @@ struct Section {
 ///////////////////////////////////////
 /// \brief The SectionHEADER struct
 ///
-struct SectionHEADER : Section {
+struct SectionHEADER final : Section {
     SectionHEADER(const QVector<CodeData>& data)
         : Section(data)
     {
@@ -103,7 +102,7 @@ struct SectionHEADER : Section {
 ///////////////////////////////////////
 /// \brief The SectionCLASSES struct
 ///
-struct SectionCLASSES : Section {
+struct SectionCLASSES final : Section {
     SectionCLASSES(const QVector<CodeData>& data)
         : Section(data)
     {
@@ -115,7 +114,7 @@ struct SectionCLASSES : Section {
 ///////////////////////////////////////
 /// \brief The SectionTABLES struct
 ///
-struct SectionTABLES : Section {
+struct SectionTABLES final : Section {
     SectionTABLES(const QVector<CodeData>& data)
         : Section(data)
     {
@@ -128,7 +127,7 @@ struct SectionTABLES : Section {
 ///////////////////////////////////////
 /// \brief The SectionBLOCKS struct
 ///
-struct SectionBLOCKS : Section {
+struct SectionBLOCKS final : Section {
     SectionBLOCKS(const QVector<CodeData>& data)
         : Section(data)
     {
@@ -137,22 +136,11 @@ struct SectionBLOCKS : Section {
     // Section interface
     void parse() override { }
 };
-///////////////////////////////////////
-/// \brief The SectionENTITIES struct
-///
-struct SectionENTITIES : Section {
-    SectionENTITIES(const QVector<CodeData>& data)
-        : Section(data)
-    {
-    }
-    virtual ~SectionENTITIES() = default;
-    // Section interface
-    void parse() override { }
-};
+
 ///////////////////////////////////////
 /// \brief The SectionOBJECTS struct
 ///
-struct SectionOBJECTS : Section {
+struct SectionOBJECTS final : Section {
     SectionOBJECTS(const QVector<CodeData>& data)
         : Section(data)
     {
@@ -164,7 +152,7 @@ struct SectionOBJECTS : Section {
 ///////////////////////////////////////
 /// \brief The SectionTHUMBNAILIMAGE struct
 ///
-struct SectionTHUMBNAILIMAGE : Section {
+struct SectionTHUMBNAILIMAGE final : Section {
     SectionTHUMBNAILIMAGE(const QVector<CodeData>& data)
         : Section(data)
     {

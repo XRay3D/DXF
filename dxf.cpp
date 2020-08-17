@@ -1,5 +1,6 @@
 #include "dxf.h"
 #include "section.h"
+#include "sectionentities.h"
 #include <QDebug>
 #include <QMetaEnum>
 

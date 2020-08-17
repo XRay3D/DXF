@@ -25,13 +25,13 @@ void SectionHEADER::parse()
         } else {
             switch (code.type) {
             case CodeData::String:
-                hData[key][code.code] = code.sVal;
+                hData[key][code.code] = std::get<QString>(code._val);
                 break;
             case CodeData::Double:
-                hData[key][code.code] = code.dVal;
+                hData[key][code.code] = std::get<double>(code._val);
                 break;
             case CodeData::Integer:
-                hData[key][code.code] = code.iVal;
+                hData[key][code.code] = std::get<qint64>(code._val);
                 break;
             }
         }
@@ -75,25 +75,11 @@ void SectionTABLES::parse()
         } else if (code.rawVal == "ENDSEC") {
             break;
         }
-
         tables.last().append(code);
-        //            key = code.rawVal;
-        //        } else {
-        //            switch (code.type) {
-        //            case CodeData::String:
-        //                hData[key][code.code] = code.sVal;
-        //                break;
-        //            case CodeData::Double:
-        //                hData[key][code.code] = code.dVal;
-        //                break;
-        //            case CodeData::Integer:
-        //                hData[key][code.code] = code.iVal;
-        //                break;
-        //            }
     }
-    for (auto t : tables) {
-        qDebug() << t;
-    }
+    //    for (auto t : tables) {
+    //        qDebug() << t;
+    //    }
     qDebug() << tables.size();
     //    qDebug() << hData.keys();
     //    if constexpr (0) {

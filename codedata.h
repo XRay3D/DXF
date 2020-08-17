@@ -8,7 +8,7 @@ struct CodeData {
     friend QDebug operator<<(QDebug debug, const CodeData& c)
     {
         QDebugStateSaver saver(debug);
-        debug.nospace() << "DC(" << c.code << ", " << c.rawVal << ", " << c.type << ')';
+        debug.nospace() << "DC(" << c.code << ", " << c.rawVal << /* ", " << c.type << */ ')';
         return debug;
     }
 
@@ -20,13 +20,10 @@ struct CodeData {
 
     CodeData(int code = 0, const QString& val = {});
 
-    /*const*/ int code = 0;
+    int code = 0;
     Type type = String;
-
-    quint64 iVal = std::numeric_limits<quint64>::min();
-    QString sVal;
-    /*const*/ QString rawVal;
-    double dVal = -std::numeric_limits<double>::max();
+    std::variant<qint64, QString, double> _val;
+    QString rawVal;
 
     Q_ENUM(Type)
     Q_GADGET

@@ -1,11 +1,16 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QApplication>
+
+QGraphicsScene* scene;
+
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->graphicsView->setScene(scene = new QGraphicsScene(ui->graphicsView));
+    ui->graphicsView->scene()->setObjectName("scene");
     on_pushButton_clicked();
 }
 

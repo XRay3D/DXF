@@ -18,15 +18,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     codedata.cpp \
     dxf.cpp \
+    graphicsview.cpp \
     main.cpp \
     mainwindow.cpp \
-    section.cpp
+    section.cpp \
+    sectionentities.cpp
 
 HEADERS += \
     codedata.h \
     dxf.h \
+    graphicsview.h \
     mainwindow.h \
-    section.h
+    section.h \
+    sectionentities.h
 
 FORMS += \
     mainwindow.ui

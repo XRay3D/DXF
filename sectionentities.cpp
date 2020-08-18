@@ -28,18 +28,29 @@ void SectionENTITIES::parse()
             entities[key].resize(entities[key].size() + 1);
         }
         entities[key].last() << code;
+        while (key == "POLYLINE" && code.rawVal != "SEQEND") {
+            // Прочитать другую пару код / значение
+            code = DXF::ReadCodes();
+            data << code;
+            entities[key].last() << code;
+        }
     }
     for (auto [key, val] : entities) {
         qDebug() << key << val.size();
     }
-    /*
-"HATCH" 242
-"INSERT" 15455
-"LINE" 16
-"LWPOLYLINE" 9562
-"SOLID" 1266
-"TEXT" 186
-*/
+    {
+        for (auto& val : entities["INSERT"]) {
+            // qDebug() << val << "\r\r";
+            //            QMap<int, double> values;
+            //            for (auto& data : val) {
+            //                if (data.type == CodeData::Double)
+            //                    values[data.code] = std::get<double>(data._val);
+            //                else if (data.type == CodeData::Integer)
+            //                    values[data.code] = std::get<qint64>(data._val);
+            //            }
+            //            scene->addLine({ { values[10], values[20] }, { values[11], values[21] } }, QPen(Qt::black, 0.0));
+        }
+    }
     {
         for (auto& val : entities["LINE"]) {
             QMap<int, double> values;
@@ -87,6 +98,29 @@ void SectionENTITIES::parse()
                 }
             }
             scene->addPolygon(poly, QPen(Qt::green, 0.0), Qt::NoBrush);
+        }
+    }
+    {
+        for (auto& val : entities["POLYLINE"]) {
+            QPolygonF poly;
+            QPointF pt;
+            double width = 0;
+            for (auto& data : val) {
+                if (data.code == 10) {
+                    pt.rx() = std::get<double>(data._val);
+                } else if (data.code == 20) {
+                    pt.ry() = std::get<double>(data._val);
+                    poly.append(pt);
+                } else if (data.code == 11) {
+                    pt.rx() = std::get<double>(data._val);
+                } else if (data.code == 21) {
+                    pt.ry() = std::get<double>(data._val);
+                    poly.append(pt);
+                } else if (data.code == 40) {
+                    width = std::get<double>(data._val);
+                }
+            }
+            scene->addPolygon(poly, QPen(Qt::green, width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush);
         }
     }
 

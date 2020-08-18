@@ -1,12 +1,13 @@
 #pragma once
 
 #include "codedata.h"
+#include "dxfblock.h"
 #include <QDebug>
 #include <QObject>
 #include <QVector>
 
 struct Entities {
-    Entities() { }
+    Entities() {}
     enum ent {
         //        3DFACE,
         //        3DSOLID,
@@ -109,7 +110,7 @@ struct SectionCLASSES final : Section {
     }
     virtual ~SectionCLASSES() = default;
     // Section interface
-    void parse() override { }
+    void parse() override {}
 };
 ///////////////////////////////////////
 /// \brief The SectionTABLES struct
@@ -134,7 +135,8 @@ struct SectionBLOCKS final : Section {
     }
     virtual ~SectionBLOCKS() = default;
     // Section interface
-    void parse() override { }
+    void parse() override;
+    QMap<QString, DxfBlock> blocks;
 };
 
 ///////////////////////////////////////
@@ -147,7 +149,7 @@ struct SectionOBJECTS final : Section {
     }
     virtual ~SectionOBJECTS() = default;
     // Section interface
-    void parse() override { }
+    void parse() override {}
 };
 ///////////////////////////////////////
 /// \brief The SectionTHUMBNAILIMAGE struct
@@ -159,5 +161,5 @@ struct SectionTHUMBNAILIMAGE final : Section {
     }
     virtual ~SectionTHUMBNAILIMAGE() = default;
     // Section interface
-    void parse() override { }
+    void parse() override {}
 };

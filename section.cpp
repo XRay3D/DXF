@@ -77,30 +77,44 @@ void SectionTABLES::parse()
         }
         tables.last().append(code);
     }
-    //    for (auto t : tables) {
-    //        qDebug() << t;
-    //    }
     qDebug() << tables.size();
-    //    qDebug() << hData.keys();
-    //    if constexpr (0) {
-    //        auto tw = new QTreeWidget();
-    //        tw->setColumnCount(2);
-    //        auto iPar = hData.constBegin();
-    //        QList<QTreeWidgetItem*> items;
-    //        while (iPar != hData.constEnd()) {
-    //            items.append(new QTreeWidgetItem((QTreeWidget*)0, QStringList(iPar.key())));
-    //            {
-    //                auto iVal = iPar.value().constBegin();
-    //                while (iVal != iPar.value().constEnd()) {
-    //                    items.last()->addChild(new QTreeWidgetItem((QTreeWidget*)0, QStringList { QString::number(iVal.key()), iVal.value().toString() }));
-    //                    ++iVal;
-    //                }
-    //            }
-    //            ++iPar;
-    //        }
-    //        tw->insertTopLevelItems(0, items);
-    //        tw->setWindowFlag(Qt::WindowStaysOnTopHint, true);
-    //        tw->expandAll();
-    //        tw->show();
-    //    }
+}
+
+void SectionBLOCKS::parse()
+{
+    qDebug(Q_FUNC_INFO);
+    CodeData code;
+    while (code.rawVal != "ENDSEC") {
+        // Прочитать другую пару код / значение
+        code = DXF::ReadCodes();
+        data << code;
+        //        if (code.rawVal == "TABLE") {
+        //            tables.resize(tables.size() + 1);
+        //                } else
+        QString name;
+        DxfBlock block;
+        block << code;
+        while (code.rawVal != "ENDBLK") {
+            code = DXF::ReadCodes();
+            data << code;
+            block << code;
+            if ((code.code == 2 || code.code == 3) && name.isEmpty()) {
+                name = code.rawVal;
+            }
+            if (code.rawVal == "ENDSEC") {
+                break;
+            }
+        }
+        if (!name.isEmpty()) {
+            blocks[name] = block;
+        }
+        if (code.rawVal == "ENDSEC") {
+            break;
+        }
+    }
+    qDebug() << blocks.size();
+    for (auto& b : blocks) {
+        qDebug() << b.bData;
+        qDebug() << b.data;
+    }
 }

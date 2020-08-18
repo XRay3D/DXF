@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     codedata.cpp \
     dxf.cpp \
+    dxfblock.cpp \
     graphicsview.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
 HEADERS += \
     codedata.h \
     dxf.h \
+    dxfblock.h \
     graphicsview.h \
     mainwindow.h \
     section.h \

@@ -22,5 +22,5 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
     //dxf.read("D:/ЛИТЕРАТУРА/DXF/HC-01_16_МКЛВ_V1.DXF");
-    dxf.read("D:/MAN2/МАН2_SCH_PCB/V2/МАН2_МСИС_V2_.dxf");
+    dxf.read("D:/PRO/VBA/Новая папка/1.dxf");
 }

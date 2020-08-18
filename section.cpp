@@ -88,28 +88,23 @@ void SectionBLOCKS::parse()
         // Прочитать другую пару код / значение
         code = DXF::ReadCodes();
         data << code;
-        //        if (code.rawVal == "TABLE") {
-        //            tables.resize(tables.size() + 1);
-        //                } else
         QString name;
         DxfBlock block;
         block << code;
         while (code.rawVal != "ENDBLK") {
+            if (code.rawVal == "ENDSEC") {
+                break;
+            }
             code = DXF::ReadCodes();
             data << code;
+
             block << code;
             if ((code.code == 2 || code.code == 3) && name.isEmpty()) {
                 name = code.rawVal;
             }
-            if (code.rawVal == "ENDSEC") {
-                break;
-            }
         }
         if (!name.isEmpty()) {
             blocks[name] = block;
-        }
-        if (code.rawVal == "ENDSEC") {
-            break;
         }
     }
     qDebug() << blocks.size();

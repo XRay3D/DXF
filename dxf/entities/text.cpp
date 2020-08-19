@@ -15,8 +15,8 @@ void TEXT::parse(CodeData& code)
 {
     do {
         data << code;
-        qDebug() << "TEXT" << code;
         code = DxfFile::ReadCodes();
     } while (code.code != 0);
+    qDebug() << "TEXT" << data;
     code = DxfFile::ReadCodes(true);
 }

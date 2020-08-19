@@ -1,9 +1,13 @@
 #pragma once
 #include "entity.h"
 
+#include <QPolygonF>
+
 struct LWPOLYLINE final : Entity {
     LWPOLYLINE();
-
+    //5
+    //8
+    //62
     enum VarType {
         SubclassMrker = 100, // Маркер подкласса (AcDbPolyline)
         NumberOfVertices = 90, // Число вершин
@@ -34,11 +38,14 @@ public:
     void draw() const override;
     void parse(CodeData& code) override;
 
-    QPointF vertexCoordinates;
+    QPolygonF poly;
+    int counter = 0;
+    int polylineFlag = 0;
     int numberOfVertices;
-    int startWidth;
-    int endWidth;
-    int constantWidth;
+    double startWidth;
+    double endWidth;
+    double constantWidth;
     int elevation;
     int thickness;
+    int bulge = 0.0;
 };

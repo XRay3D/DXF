@@ -15,7 +15,6 @@ void HATCH::parse(CodeData& code)
 {
     do {
         data << code;
-        qDebug() << "TEXT" << code;
         code = DxfFile::ReadCodes();
     } while (code.code != 0);
     code = DxfFile::ReadCodes(true);

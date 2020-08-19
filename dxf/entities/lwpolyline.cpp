@@ -10,27 +10,18 @@ LWPOLYLINE::LWPOLYLINE()
 }
 
 void LWPOLYLINE::draw() const
-{    qDebug(Q_FUNC_INFO);
-
-    QPolygonF poly;
-    QPointF pt;
-    double width = 0;
-    for (auto& d : data) {
-        if (d.code == 10) {
-            pt.rx() = std::get<double>(d._val);
-        } else if (d.code == 20) {
-            pt.ry() = std::get<double>(d._val);
-            poly.append(pt);
-        } else if (d.code == 11) {
-            pt.rx() = std::get<double>(d._val);
-        } else if (d.code == 21) {
-            pt.ry() = std::get<double>(d._val);
-            poly.append(pt);
-        } else if (d.code == 40) {
-            width = std::get<double>(d._val);
-        }
-    }
-    scene->addPolygon(poly, QPen(Qt::black, constantWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush);
+{
+    qDebug(Q_FUNC_INFO);
+    if (bulge != 0.0) { // решение в лоб
+        QLineF l(poly.first(), poly.last());
+        QRectF r;
+        r.setLeft(l.p1().x());
+        r.setRight(l.p2().x());
+        r.setTop(l.p1().y() + l.length() / 2);
+        r.setBottom(l.p2().y() - l.length() / 2);
+        scene->addEllipse(r, QPen(Qt::black, constantWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush);
+    } else
+        scene->addPolygon(poly, QPen(Qt::red, constantWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush);
 }
 
 void LWPOLYLINE::parse(CodeData& code)
@@ -42,8 +33,10 @@ void LWPOLYLINE::parse(CodeData& code)
             break;
         case NumberOfVertices:
             numberOfVertices = code.getInteger();
+            poly.resize(numberOfVertices);
             break;
         case PolylineFlag:
+            polylineFlag = code.getInteger();
             break;
         case ConstantWidth:
             constantWidth = code.getDouble();
@@ -55,8 +48,10 @@ void LWPOLYLINE::parse(CodeData& code)
             thickness = code.getDouble();
             break;
         case VertexCoordinatesX:
+            poly[counter].rx() = code.getDouble();
             break;
         case VertexCoordinatesY:
+            poly[counter++].ry() = code.getDouble();
             break;
         case VertexID:
             break;
@@ -67,6 +62,7 @@ void LWPOLYLINE::parse(CodeData& code)
             endWidth = code.getDouble();
             break;
         case Bulge:
+            bulge = code.getDouble();
             break;
         case ExtrDirX:
             break;

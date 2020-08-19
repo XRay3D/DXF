@@ -1,7 +1,8 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
-#include "dxf.h"
+
+
+#include "dxf/dxf.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -21,7 +22,7 @@ private slots:
     void on_pushButton_clicked();
 
 private:
-    DXF dxf;
+    DxfFile dxf;
     Ui::MainWindow* ui;
 };
-#endif // MAINWINDOW_H
+

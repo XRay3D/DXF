@@ -1,5 +1,6 @@
-#ifndef GRAPHICSVIEW_H
-#define GRAPHICSVIEW_H
+#pragma once
+
+
 
 #include <QGraphicsView>
 
@@ -25,4 +26,4 @@ protected:
     void mouseMoveEvent(QMouseEvent* event) override;
 };
 
-#endif // GRAPHICSVIEW_H
+

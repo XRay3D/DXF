@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QObject>
 
-using var = std::variant<qint64, QString, double>;
+using var = std::variant<double, qint64, QString>;
 
 struct CodeData {
 
@@ -15,12 +15,16 @@ struct CodeData {
     }
 
     enum Type {
-        String,
         Double,
-        Integer
+        Integer,
+        String,
     };
 
     CodeData(int code = 0, const QString& val = {});
+
+    double getDouble() { return std::get<Double>(_val); }
+    qint64 getInteger() { return std::get<Integer>(_val); }
+    QString getString() { return std::get<String>(_val); }
 
     int code = 0;
     Type type = String;

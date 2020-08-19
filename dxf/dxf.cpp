@@ -10,11 +10,12 @@
 #include <dxf/section/sectiontables.h>
 #include <dxf/section/sectionthumbnailimage.h>
 
-QTextStream DxfFile::in;
+DxfFile* DxfFile::self;
 
 DxfFile::DxfFile(QObject* parent)
     : QObject(parent)
 {
+    self = this;
 }
 
 DxfFile::~DxfFile() { qDeleteAll(sections); }
@@ -34,10 +35,12 @@ void DxfFile::read(const QString& fileName,
         return;
 
     in.setDevice(&file);
-    //    while (!in.atEnd()) {
-    //        QString line = in.readLine();
-    //        process_line(line);
-    //    }
+    while (!in.atEnd()) {
+        QString codeStr, valStr;
+        codeStr = in.readLine();
+        valStr = in.readLine();
+        cd.append({ codeStr.toInt(), valStr });
+    }
 
     QString ReadDXF;
     QString tmpCode;
@@ -140,11 +143,13 @@ void DxfFile::read(const QString& fileName,
 // other checking.
 CodeData DxfFile::ReadCodes()
 {
-    QString codeStr, valStr;
-    codeStr = in.readLine();
-    valStr = in.readLine();
-    CodeData ret { codeStr.toInt(), valStr };
-    return ret;
+    static int ctr = 0;
+    return self->cd[ctr++];
+    //    QString codeStr, valStr;
+    //    codeStr = in.readLine();
+    //    valStr = in.readLine();
+    //    CodeData ret{ codeStr.toInt(), valStr };
+    //    return ret;
 }
 
 int SectionParser::key(const QString& key)

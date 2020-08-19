@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 // https://help.autodesk.com/view/OARX/2020/RUS/?guid=GUID-235B22E0-A567-4CF6-92D3-38A2306D73F3
 
 #include "codedata.h"
@@ -23,12 +21,12 @@ public:
     static CodeData ReadCodes();
 
 private:
+    static DxfFile* self;
     QFile file;
-    static QTextStream in;
+    QTextStream in;
     QVector<SectionParser*> sections;
+    QVector<CodeData> cd;
     DxfHeader header;
 
 signals:
 };
-
-

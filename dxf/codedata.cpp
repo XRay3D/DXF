@@ -10,7 +10,7 @@ CodeData::CodeData(int code, const QString& val)
                                                     limit has been increased to 2049 single-byte characters not including the newline at the end
                                                     of the line)*/
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (10 <= code && code <= 39) { //       Double precision 3D point value
         type = Double;
         _val = val.toDouble();
@@ -25,13 +25,13 @@ CodeData::CodeData(int code, const QString& val)
         _val = static_cast<qint64>(val.toLongLong());
     } else if (code == 100) { //                    String (255-character maximum; less for Unicode strings)
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (code == 102) { //                    String (255-character maximum; less for Unicode strings)
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (code == 105) { //                    String representing hexadecimal (hex) handle value
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (110 <= code && code <= 119) { //     Double precision floating-point value
         type = Double;
         _val = val.toDouble();
@@ -64,16 +64,16 @@ CodeData::CodeData(int code, const QString& val)
         _val = static_cast<qint64>(val.toLongLong());
     } else if (300 <= code && code <= 309) { //     Arbitrary text string
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (310 <= code && code <= 319) { //     String representing hex value of binary chunk
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (320 <= code && code <= 329) { //     String representing hex handle value
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (330 <= code && code <= 369) { //     String representing hex object IDs
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (370 <= code && code <= 379) { //     16-bit integer value
         type = Integer;
         _val = static_cast<qint64>(val.toLongLong());
@@ -82,19 +82,19 @@ CodeData::CodeData(int code, const QString& val)
         _val = static_cast<qint64>(val.toLongLong());
     } else if (390 <= code && code <= 399) { //     String representing hex handle value
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (400 <= code && code <= 409) { //     16-bit integer value
         type = Integer;
         _val = static_cast<qint64>(val.toLongLong());
     } else if (410 <= code && code <= 419) { //     String
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (420 <= code && code <= 429) { //     32-bit integer value
         type = Integer;
         _val = static_cast<qint64>(val.toLongLong());
     } else if (430 <= code && code <= 439) { //     String
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (440 <= code && code <= 449) { //     32-bit integer value
         type = Integer;
         _val = static_cast<qint64>(val.toLongLong());
@@ -106,16 +106,16 @@ CodeData::CodeData(int code, const QString& val)
         _val = val.toDouble();
     } else if (470 <= code && code <= 479) { //     String
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (480 <= code && code <= 481) { //     String representing hex handle value
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (code == 999) { //                    Comment (string)
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (1000 <= code && code <= 1009) { //   String (same limits as indicated with 0-9 code range)
         type = String;
-        _val = val;
+        _val = rawVal;
     } else if (1010 <= code && code <= 1059) { //   Double-precision floating-point value
         type = Double;
         _val = val.toDouble();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "section.h"
+#include "sectionparser.h"
 
 struct SectionOBJECTS final : SectionParser {
     SectionOBJECTS(const QVector<CodeData>& data);

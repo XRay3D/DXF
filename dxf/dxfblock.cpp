@@ -7,15 +7,13 @@ DxfBlock::DxfBlock()
 {
 }
 
+DxfBlock::~DxfBlock() { qDeleteAll(entities); }
+
 void DxfBlock::parse(CodeData& code)
 { // Прочитать другую пару код / значение
+    code = DxfFile::ReadCodes();
+    code = DxfFile::ReadCodes();
     do {
-        code = DxfFile::ReadCodes();
-        if (code.rawVal == "ENDSEC" || code.rawVal == "ENDBLK")
-            break;
-        if (code.rawVal == "BLOCK")
-            continue;
-
         if (bs && code.code) {
             bData.append(code);
             switch (code.code) {
@@ -65,7 +63,19 @@ void DxfBlock::parse(CodeData& code)
             entities = se.entities;
             se.entities.clear();
         }
+        code = DxfFile::ReadCodes();
+        //        if (code.rawVal == "ENDSEC" || code.rawVal == "ENDBLK")
+        //            break;
+        //        if (code.rawVal == "BLOCK")
+        //            continue;
     } while (code.rawVal != "ENDBLK");
+
+    do {
+        code = DxfFile::ReadCodes();
+    } while (code.code != 0);
+
+    code = DxfFile::ReadCodes(true);
+
     qDebug() << blockName << layerName << basePoint << flags << blockDescription;
     qDebug() << "data" << entities;
     qDebug("\n");

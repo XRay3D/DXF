@@ -1,6 +1,5 @@
 #include "polyline.h"
 #include <QGraphicsScene>
-#include <QGraphicsView>
 #include <QPolygonF>
 #include <dxf/dxf.h>
 
@@ -11,7 +10,8 @@ POLYLINE::POLYLINE()
 }
 
 void POLYLINE::draw() const
-{
+{    qDebug(Q_FUNC_INFO);
+
     QPolygonF poly;
     QPointF pt;
     double width = 0;

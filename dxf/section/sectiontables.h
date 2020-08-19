@@ -1,5 +1,5 @@
 #pragma once
-#include "section.h"
+#include "sectionparser.h"
 
 struct SectionTABLES final : SectionParser {
     SectionTABLES(const QVector<CodeData>& data);

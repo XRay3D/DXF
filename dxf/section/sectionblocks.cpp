@@ -11,10 +11,12 @@ void SectionBLOCKS::parse()
     qDebug(Q_FUNC_INFO);
     CodeData code;
     while (code.rawVal != "ENDSEC") {
-        DxfBlock block;
-        block.parse(code);
-        if (!block.blockName.isEmpty()) {
-            blocks[block.blockName] = block;
-        }
+        code = DxfFile::ReadCodes();
+        //        DxfBlock block;
+        //        block.parse(code);
+        //        qDebug() << "blockName" << block.blockName;
+        //        if (!block.blockName.isEmpty()) {
+        //            blocks[block.blockName] = block;
+        //        }
     }
 }

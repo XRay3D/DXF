@@ -3,8 +3,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QTimer>
-#include <dxf/entities/insert.h>
-#include <dxf/entities/polyline.h>
+#include <dxf/entities/entity.h>
 
 extern QGraphicsScene* scene;
 
@@ -17,33 +16,27 @@ SectionENTITIES::SectionENTITIES(CodeData& code)
     : SectionParser({ {}, {} })
 {
     qDebug(Q_FUNC_INFO);
-    dontSkip = false;
     while (code.rawVal != "ENDBLK") {
         // Прочитать другую пару код / значение
-        if (dontSkip)
-            code = DxfFile::ReadCodes();
-        if (code.rawVal == "ENDBLK")
+        //        code = DxfFile::ReadCodes();
+        //        if (code.rawVal == "ENDBLK" || code.rawVal == "BLOCK")
+        //            break;
+        iParse(code);
+        if (code.rawVal == "ENDBLK" || code.rawVal == "BLOCK")
             break;
-        if (iParse(code))
-            continue;
-        dontSkip = true;
     }
 }
 
 void SectionENTITIES::parse()
 {
     qDebug(Q_FUNC_INFO);
-    dontSkip = true;
     while (code.rawVal != "ENDSEC") {
         // Прочитать другую пару код / значение
-        if (dontSkip)
-            code = DxfFile::ReadCodes();
+        code = DxfFile::ReadCodes();
         data << code;
         if (code.rawVal == "ENDSEC")
             break;
-        if (iParse(code))
-            continue;
-        dontSkip = true;
+        iParse(code);
     }
 
     for (auto e : entities) {
@@ -60,63 +53,101 @@ void SectionENTITIES::parse()
     });
 }
 
-bool SectionENTITIES::iParse(CodeData& code)
+void SectionENTITIES::iParse(CodeData& code)
 {
-    if (int k = Entity::toType(code.rawVal); k > -1)
-        key = static_cast<Entity::Type>(k);
+
+    //    Entity::CIRCLE
+    //    Entity::HATCH
+    //    Entity::INSERT
+    //    Entity::LINE
+    //    Entity::LWPOLYLINE
+    //    Entity::SOLID
+    //    Entity::TEXT
+
+    key = static_cast<Entity::Type>(Entity::toType(code.rawVal));
     switch (key) {
     case Entity::ACAD_PROXY_ENTITY:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::ARC:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::ATTDEF:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::ATTRIB:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::BODY:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::CIRCLE:
-        return false;
+        entities.append(new CIRCLE);
+        entities.last()->parse(code);
+        entitiesMap[key] << entities.last();
+        return;
     case Entity::DIMENSION:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::ELLIPSE:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::HATCH:
-        return false;
+        entities.append(new HATCH);
+        entities.last()->parse(code);
+        entitiesMap[key] << entities.last();
+        return;
     case Entity::HELIX:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::IMAGE:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::INSERT:
         entities.append(new INSERT);
         entities.last()->parse(code);
         entitiesMap[key] << entities.last();
-        dontSkip = false;
-        return true;
+        return;
     case Entity::LEADER:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::LIGHT:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::LINE:
-        return false;
+        entities.append(new LINE);
+        entities.last()->parse(code);
+        entitiesMap[key] << entities.last();
+        return;
     case Entity::LWPOLYLINE:
-        return false;
+        entities.append(new LWPOLYLINE);
+        entities.last()->parse(code);
+        entitiesMap[key] << entities.last();
+        return;
     case Entity::MESH:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::MLEADER:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::MLEADERSTYLE:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::MLINE:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::MTEXT:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::OLE2FRAME:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::OLEFRAME:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::POINT:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::POLYLINE: ////////////
         entities.append(new POLYLINE);
         entities.last()->parse(code);
@@ -128,44 +159,71 @@ bool SectionENTITIES::iParse(CodeData& code)
         //                data << code;
         //                entities[key].last() << code;
         //            }
-        return false;
+        return;
     case Entity::RAY:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::REGION:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::SECTION:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::SEQEND:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::SHAPE:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::SOLID:
-        return false;
+        entities.append(new SOLID);
+        entities.last()->parse(code);
+        entitiesMap[key] << entities.last();
+        return;
     case Entity::SPLINE:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::SUN:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::SURFACE:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::TABLE:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::TEXT:
-        return false;
+        entities.append(new TEXT);
+        entities.last()->parse(code);
+        entitiesMap[key] << entities.last();
+        return;
     case Entity::TOLERANCE:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::TRACE:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::UNDERLAY:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::VERTEX:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::VIEWPORT:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::WIPEOUT:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
     case Entity::XLINE:
-        return false;
+        qDebug() << key << code.rawVal;
+        return;
+    default:
+        qDebug() << key << code.rawVal;
+        exit(-1000);
     }
+    qDebug() << key << code.rawVal;
+    return;
 }
 
 //    for (auto [key, val] : entities) {

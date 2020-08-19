@@ -23,8 +23,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    const QString str("D:/PRO/VBA/Новая папка/1.dxf");
-    //dxf.read("D:/ЛИТЕРАТУРА/DXF/HC-01_16_МКЛВ_V1.DXF");
+    //const QString str("D:/PRO/VBA/Новая папка/1.dxf");
+    const QString str("D:/MAN2/МАН2_SCH_PCB/V2/МАН2_МСИС_V2_.dxf");
     dxf.read(str);
 
     //    dxfRW dxf(str.toLocal8Bit().data());

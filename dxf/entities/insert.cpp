@@ -27,6 +27,7 @@ INSERT::INSERT()
 
 void INSERT::draw() const
 {
+    qDebug(Q_FUNC_INFO);
 }
 
 void INSERT::parse(CodeData& code)
@@ -77,7 +78,7 @@ void INSERT::parse(CodeData& code)
                 break;
             }
         }
-
         code = DxfFile::ReadCodes();
     } while (code.code != 0);
+    code = DxfFile::ReadCodes(true);
 }

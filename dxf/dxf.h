@@ -18,7 +18,7 @@ public:
     explicit DxfFile(QObject* parent = nullptr);
     ~DxfFile();
     void read(const QString& fileName, QString strSection = {}, QString strObject = {}, QString strCodeList = {});
-    static CodeData ReadCodes();
+    static CodeData ReadCodes(bool retract = false);
 
 private:
     static DxfFile* self;

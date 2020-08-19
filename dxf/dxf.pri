@@ -59,12 +59,12 @@ HEADERS += \
      $$PWD/entities/viewport.h \
      $$PWD/entities/wipeout.h \
      $$PWD/entities/xline.h \
-     $$PWD/section/section.h \
      $$PWD/section/sectionblocks.h \
      $$PWD/section/sectionclasses.h \
      $$PWD/section/sectionentities.h \
      $$PWD/section/sectionheader.h \
      $$PWD/section/sectionobjects.h \
+    $$PWD/section/sectionparser.h \
      $$PWD/section/sectiontables.h \
      $$PWD/section/sectionthumbnailimage.h \
 
@@ -116,11 +116,11 @@ SOURCES += \
      $$PWD/entities/viewport.cpp \
      $$PWD/entities/wipeout.cpp \
      $$PWD/entities/xline.cpp \
-     $$PWD/section/section.cpp \
      $$PWD/section/sectionblocks.cpp \
      $$PWD/section/sectionclasses.cpp \
      $$PWD/section/sectionentities.cpp \
      $$PWD/section/sectionheader.cpp \
      $$PWD/section/sectionobjects.cpp \
+    $$PWD/section/sectionparser.cpp \
      $$PWD/section/sectiontables.cpp \
      $$PWD/section/sectionthumbnailimage.cpp \

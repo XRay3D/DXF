@@ -1,6 +1,7 @@
 #pragma once
 
-#include "section.h"
+#include "sectionparser.h"
+#include <dxfheader.h>
 
 struct SectionHEADER final : SectionParser {
     SectionHEADER(DxfHeader& header, const QVector<CodeData>& data);

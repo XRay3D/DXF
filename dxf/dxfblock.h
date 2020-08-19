@@ -7,7 +7,7 @@ struct Entity;
 
 struct DxfBlock {
     DxfBlock();
-    ~DxfBlock() { qDeleteAll(entities); }
+    ~DxfBlock();
     void parse(CodeData& code);
 
     enum VarType {

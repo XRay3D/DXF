@@ -1,6 +1,6 @@
 #include "dxf.h"
-#include "section/section.h"
 #include "section/sectionentities.h"
+#include "section/sectionparser.h"
 #include <QDebug>
 #include <QMetaEnum>
 #include <dxf/section/sectionblocks.h>
@@ -141,15 +141,13 @@ void DxfFile::read(const QString& fileName,
 // two lines at a time, all should be fine. However, to make your
 // code more reliable, you should add some additional error and
 // other checking.
-CodeData DxfFile::ReadCodes()
+CodeData DxfFile::ReadCodes(bool retract)
 {
     static int ctr = 0;
-    return self->cd[ctr++];
-    //    QString codeStr, valStr;
-    //    codeStr = in.readLine();
-    //    valStr = in.readLine();
-    //    CodeData ret{ codeStr.toInt(), valStr };
-    //    return ret;
+    if (retract)
+        return self->cd[--ctr];
+    else
+        return self->cd[ctr++];
 }
 
 int SectionParser::key(const QString& key)

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "section.h"
+#include "sectionparser.h"
+#include <dxfblock.h>
 
 ///////////////////////////////////////
 /// \brief The SectionBLOCKS struct

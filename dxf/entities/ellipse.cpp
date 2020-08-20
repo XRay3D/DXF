@@ -1,6 +1,6 @@
 #include "ellipse.h"
 
-ELLIPSE::ELLIPSE()
+ELLIPSE::ELLIPSE(SectionParser *sp)
+    : Entity(sp)
 {
-
 }

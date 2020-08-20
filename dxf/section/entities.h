@@ -4,13 +4,14 @@
 
 #include <dxf/codedata.h>
 #include <dxf/entities/entity.h>
+#include <dxfblock.h>
 
 ///////////////////////////////////////
 /// \brief The SectionENTITIES struct
 ///
 struct SectionENTITIES final : SectionParser {
-    explicit SectionENTITIES(QVector<CodeData>&& data);
-    SectionENTITIES(CodeData& code);
+    explicit SectionENTITIES(QMap<QString, DxfBlock*>& blocks, QVector<CodeData>&& data);
+    SectionENTITIES(QMap<QString, DxfBlock*>& blocks, CodeData& code, SectionParser* sp = nullptr);
 
     virtual ~SectionENTITIES() { qDeleteAll(entities); }
     // Section interface
@@ -23,4 +24,6 @@ private:
     void iParse(CodeData& code);
     CodeData code;
     Entity::Type key;
+    SectionParser* sp;
+    QMap<QString, DxfBlock*>& blocks;
 };

@@ -1,13 +1,13 @@
 #include "dxf.h"
-#include "section/sectionentities.h"
+#include "section/entities.h"
 #include "section/sectionparser.h"
 #include <QDebug>
-#include <dxf/section/sectionblocks.h>
-#include <dxf/section/sectionclasses.h>
-#include <dxf/section/sectionheader.h>
-#include <dxf/section/sectionobjects.h>
-#include <dxf/section/sectiontables.h>
-#include <dxf/section/sectionthumbnailimage.h>
+#include <dxf/section/blocks.h>
+#include <dxf/section/classes.h>
+#include <dxf/section/header.h>
+#include <dxf/section/objects.h>
+#include <dxf/section/tables.h>
+#include <dxf/section/thumbnailimage.h>
 
 DxfFile* DxfFile::self;
 
@@ -30,17 +30,13 @@ void DxfFile::read(const QString& fileName)
     in.setDevice(&file);
     //    while (!in.atEnd()) {
     //    }
-
+    int ctr = 0;
     QVector<CodeData> codes;
     do {
         QString codeStr(in.readLine());
         QString valStr(in.readLine());
-        codes.append({ codeStr.toInt(), valStr });
+        codes.append({ codeStr.toInt(), valStr, ctr += 2 });
         if (codes.last().rawVal == "ENDSEC") {
-            qDebug() << codes[0];
-            qDebug() << codes[1];
-            qDebug() << codes.last();
-            qDebug("\n");
             switch (SectionParser::key(codes[1].rawVal)) {
             case SectionParser::HEADER:
                 sections << new SectionHEADER(header, std::move(codes));
@@ -52,10 +48,10 @@ void DxfFile::read(const QString& fileName)
                 sections << new SectionTABLES(std::move(codes));
                 break;
             case SectionParser::BLOCKS:
-                sections << new SectionBLOCKS(std::move(codes));
+                sections << new SectionBLOCKS(blocks, std::move(codes));
                 break;
             case SectionParser::ENTITIES:
-                sections << new SectionENTITIES(std::move(codes));
+                sections << new SectionENTITIES(blocks, std::move(codes));
                 break;
             case SectionParser::OBJECTS:
                 sections << new SectionOBJECTS(std::move(codes));

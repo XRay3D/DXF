@@ -1,9 +1,10 @@
 #include "codedata.h"
 
-CodeData::CodeData(int code, const QString& val)
+CodeData::CodeData(int code, const QString& val, int ln)
     : code(code)
     , type(String)
     , rawVal(val)
+    , ln(ln)
 {
 
     if (0 <= code && code <= 9) { /*                String (with the introduction of extended symbol names in AutoCAD 2000, the 255-character

@@ -1,12 +1,14 @@
 #pragma once
 #include "entity.h"
 struct POLYLINE final : Entity {
-    POLYLINE();
+    POLYLINE(SectionParser* sp);
 
     // Entity interface
 public:
     void draw() const override;
+    void drawInsert(INSERT_ET* i) const override;
     void parse(CodeData& code) override;
+    Type type() const override { return Type::POLYLINE; }
 
     enum VarType {
         SubclassMarker = 100, // Маркер подкласса (AcDb2dPolyline или AcDb3dPolyline)

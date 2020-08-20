@@ -1,15 +1,18 @@
 #pragma once
 
 #include "entity.h"
+#include <dxfblock.h>
 #include <set>
 
-struct INSERT final : Entity {
-    INSERT();
+struct INSERT_ET final : Entity {
+    INSERT_ET(QMap<QString, DxfBlock*>& blocks, SectionParser* sp);
 
     // Entity interface
 public:
     void draw() const override;
+    void drawInsert(INSERT_ET* i) const override;
     void parse(CodeData& code) override;
+    Type type() const override { return Type::INSERT; }
 
     enum VarType {
         SubclassMrker = 100, // Subclass marker (AcDbBlockReference)
@@ -36,9 +39,14 @@ public:
     const std::set<VarType> checker;
     std::map<VarType, var&> vars;
     //QMap<VarType, var&> vars;
-
+    QMap<QString, DxfBlock*>& blocks;
     QString blockName; // Block name
     QPointF insPt; // Точка вставки (в ОСК). Файл DXF: значение X; приложение: 3D-точка
     double scaleX = 1; // Масштабный коэффициент по оси X(необязательно; значение по умолчанию = 1)
     double scaleY = 1; // Масштабный коэффициент по оси Y (необязательно; значение по умолчанию = 1)
+    double rotationAngle = 0;
+    int colCount = 1; // Column count (optional; default = 1)
+    int rowCount = 1; // Row count (optional; default = 1)
+    double colSpacing = 0; // Column spacing (optional; default = 0)
+    double rowSpacing = 0; // Row spacing (optional; default = 0)
 };

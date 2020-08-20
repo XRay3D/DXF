@@ -6,12 +6,12 @@
 using var = std::variant<double, qint64, QString>;
 
 struct CodeData {
-    CodeData(int code = 0, const QString& val = {});
+    CodeData(int code = 0, const QString& val = {}, int ln = 0);
 
     friend QDebug operator<<(QDebug debug, const CodeData& c)
     {
         QDebugStateSaver saver(debug);
-        debug.nospace() << "DC(" << c.code << ", " << c.rawVal << /* ", " << c.type << */ ')';
+        debug.nospace() << "DC(" << c.code << ", " << c.rawVal << ", " << c.ln << ')';
         return debug;
     }
 
@@ -29,7 +29,7 @@ struct CodeData {
     Type type = String;
     var _val;
     QString rawVal;
-
+    int ln;
     Q_ENUM(Type)
     Q_GADGET
 };

@@ -1,6 +1,6 @@
 #include "xline.h"
 
-XLINE::XLINE()
+XLINE::XLINE(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

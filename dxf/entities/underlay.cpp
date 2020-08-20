@@ -1,6 +1,6 @@
 #include "underlay.h"
 
-UNDERLAY::UNDERLAY()
+UNDERLAY::UNDERLAY(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

@@ -1,5 +1,5 @@
 #pragma once
 #include "entity.h"
 struct MLEADER final : Entity {
-    MLEADER();
+    MLEADER(SectionParser* sp);
 };

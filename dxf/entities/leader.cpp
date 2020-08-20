@@ -1,6 +1,6 @@
 #include "leader.h"
 
-LEADER::LEADER()
+LEADER::LEADER(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

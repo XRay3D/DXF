@@ -4,7 +4,7 @@
 #include <QPolygonF>
 
 struct LWPOLYLINE final : Entity {
-    LWPOLYLINE();
+    LWPOLYLINE(SectionParser* sp);
     //5
     //8
     //62
@@ -36,7 +36,9 @@ struct LWPOLYLINE final : Entity {
     // Entity interface
 public:
     void draw() const override;
+    void drawInsert(INSERT_ET* i) const override;
     void parse(CodeData& code) override;
+    Type type() const override { return Type::LWPOLYLINE; }
 
     QPolygonF poly;
     int counter = 0;

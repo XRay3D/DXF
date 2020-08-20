@@ -1,4 +1,4 @@
-#include "sectionentities.h"
+#include "entities.h"
 #include "../dxf.h"
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -7,150 +7,139 @@
 
 extern QGraphicsScene* scene;
 
-SectionENTITIES::SectionENTITIES(QVector<CodeData>&& data)
+SectionENTITIES::SectionENTITIES(QMap<QString, DxfBlock*>& blocks, QVector<CodeData>&& data)
     : SectionParser(std::move(data))
+    , sp(this)
+    , blocks(blocks)
 {
 }
 
-SectionENTITIES::SectionENTITIES(CodeData& code)
+SectionENTITIES::SectionENTITIES(QMap<QString, DxfBlock*>& blocks, CodeData& code, SectionParser* sp)
     : SectionParser({ {}, {} })
+    , sp(sp)
+    , blocks(blocks)
 {
-    //    qDebug(Q_FUNC_INFO);
-    //    while (code.rawVal != "ENDBLK") {
-    //        // Прочитать другую пару код / значение
-    //        //        code = nextCode();
-    //        //        if (code.rawVal == "ENDBLK" || code.rawVal == "BLOCK")
-    //        //            break;
-    //        iParse(code);
-    //        if (code.rawVal == "ENDBLK" || code.rawVal == "BLOCK")
-    //            break;
-    //        code = nextCode();
-    //    }
+    do {
+        iParse(code);
+        code = sp->nextCode();
+    } while (code.rawVal != "ENDBLK");
 }
 
 void SectionENTITIES::parse()
 {
-    //    qDebug(Q_FUNC_INFO);
-    //    while (code.rawVal != "ENDSEC") {
-    //        // Прочитать другую пару код / значение
-    //        code = nextCode();
-    //        data << code;
-    //        if (code.rawVal == "ENDSEC")
-    //            break;
-    //        iParse(code);
-    //    }
+    qDebug(Q_FUNC_INFO);
+    code = nextCode();
+    code = nextCode();
+    while (code.rawVal != "ENDSEC") {
+        // Прочитать другую пару код / значение
+        code = nextCode();
+        if (code.rawVal == "ENDSEC")
+            break;
+        iParse(code);
+    }
 
-    //    for (auto e : entities) {
-    //        e->draw();
-    //    }
+    for (auto e : entities) {
+        e->draw();
+    }
 
-    //    QTimer::singleShot(100, [] {
-    //        auto r = scene->itemsBoundingRect();
-    //        r.moveTopLeft(r.topLeft() + QPointF { +1, +1 });
-    //        r.moveBottomRight(r.bottomRight() + QPointF { -1, -1 });
-    //        scene->setSceneRect(r);
-    //        reinterpret_cast<QGraphicsView*>(scene->parent())->scale(100, 100);
-    //        reinterpret_cast<QGraphicsView*>(scene->parent())->fitInView(scene->itemsBoundingRect(), Qt::KeepAspectRatio);
-    //    });
+    QTimer::singleShot(100, [] {
+        auto r = scene->itemsBoundingRect();
+        r.moveTopLeft(r.topLeft() + QPointF { +1, +1 });
+        r.moveBottomRight(r.bottomRight() + QPointF { -1, -1 });
+        scene->setSceneRect(r);
+        reinterpret_cast<QGraphicsView*>(scene->parent())->scale(100, 100);
+        reinterpret_cast<QGraphicsView*>(scene->parent())->fitInView(scene->itemsBoundingRect(), Qt::KeepAspectRatio);
+    });
 }
 
 void SectionENTITIES::iParse(CodeData& code)
 {
-
-    //    Entity::CIRCLE
-    //    Entity::HATCH
-    //    Entity::INSERT
-    //    Entity::LINE
-    //    Entity::LWPOLYLINE
-    //    Entity::SOLID
-    //    Entity::TEXT
-
     key = static_cast<Entity::Type>(Entity::toType(code.rawVal));
     switch (key) {
     case Entity::ACAD_PROXY_ENTITY:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::ARC:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::ATTDEF:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::ATTRIB:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::BODY:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::CIRCLE:
-        entities.append(new CIRCLE);
+        entities.append(new CIRCLE(sp));
         entities.last()->parse(code);
         entitiesMap[key] << entities.last();
         return;
     case Entity::DIMENSION:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::ELLIPSE:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::HATCH:
-        entities.append(new HATCH);
+        entities.append(new HATCH(sp));
         entities.last()->parse(code);
         entitiesMap[key] << entities.last();
         return;
     case Entity::HELIX:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::IMAGE:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::INSERT:
-        entities.append(new INSERT);
+        entities.append(new INSERT_ET(blocks, sp));
         entities.last()->parse(code);
         entitiesMap[key] << entities.last();
         return;
     case Entity::LEADER:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::LIGHT:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::LINE:
-        entities.append(new LINE);
+        entities.append(new LINE(sp));
         entities.last()->parse(code);
         entitiesMap[key] << entities.last();
         return;
     case Entity::LWPOLYLINE:
-        entities.append(new LWPOLYLINE);
+        entities.append(new LWPOLYLINE(sp));
         entities.last()->parse(code);
         entitiesMap[key] << entities.last();
         return;
     case Entity::MESH:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::MLEADER:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::MLEADERSTYLE:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::MLINE:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::MTEXT:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::OLE2FRAME:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::OLEFRAME:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::POINT:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::POLYLINE: ////////////
-        entities.append(new POLYLINE);
+        entities.append(new POLYLINE(sp));
         entities.last()->parse(code);
         entitiesMap[key] << entities.last();
         //            entities[key].last() << code;
@@ -163,68 +152,67 @@ void SectionENTITIES::iParse(CodeData& code)
         return;
     case Entity::RAY:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::REGION:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::SECTION:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::SEQEND:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::SHAPE:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::SOLID:
-        entities.append(new SOLID);
+        entities.append(new SOLID(sp));
         entities.last()->parse(code);
         entitiesMap[key] << entities.last();
         return;
     case Entity::SPLINE:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::SUN:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::SURFACE:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::TABLE:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::TEXT:
-        entities.append(new TEXT);
+        entities.append(new TEXT(sp));
         entities.last()->parse(code);
         entitiesMap[key] << entities.last();
         return;
     case Entity::TOLERANCE:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::TRACE:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::UNDERLAY:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::VERTEX:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::VIEWPORT:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::WIPEOUT:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     case Entity::XLINE:
         qDebug() << key << code.rawVal;
-        return;
+        break;
     default:
-        qDebug() << key << code.rawVal;
-        exit(-1000);
+        break;
     }
-    qDebug() << key << code.rawVal;
-    return;
+    qDebug() << key << code;
+    exit(-1000);
 }
 
 //    for (auto [key, val] : entities) {
@@ -240,7 +228,7 @@ void SectionENTITIES::iParse(CodeData& code)
 //            //                else if (data.type == CodeData::Integer)
 //            //                    values[data.code] = std::get<qint64>(data._val);
 //            //            }
-//            //            scene->addLine({ { values[10], values[20] }, { values[11], values[21] } }, QPen(Qt::black, 0.0));
+//            //            scene->addLine({ { values[10], values[20] }, { values[11], values[21] } }, QPen(QColor(0, 0, 0, 100), 0.0));
 //        }
 //    }
 //    {
@@ -252,7 +240,7 @@ void SectionENTITIES::iParse(CodeData& code)
 //                else if (data.type == CodeData::Integer)
 //                    values[data.code] = std::get<qint64>(data._val);
 //            }
-//            scene->addLine({ { values[10], values[20] }, { values[11], values[21] } }, QPen(Qt::black, 0.0));
+//            scene->addLine({ { values[10], values[20] }, { values[11], values[21] } }, QPen(QColor(0, 0, 0, 100), 0.0));
 //        }
 //    }
 //    {
@@ -269,7 +257,7 @@ void SectionENTITIES::iParse(CodeData& code)
 //                    ++counter;
 //                }
 //            }
-//            scene->addPolygon(poly, QPen(Qt::red, 0.0), Qt::NoBrush);
+//            scene->addPolygon(poly, QPen(QColor(0, 255, 255, 100), 0.0), Qt::NoBrush);
 //        }
 //    }
 //    {

@@ -1,6 +1,6 @@
 #include "spline.h"
 
-SPLINE::SPLINE()
+SPLINE::SPLINE(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

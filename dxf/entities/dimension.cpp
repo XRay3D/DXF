@@ -1,6 +1,6 @@
 #include "dimension.h"
 
-DIMENSION::DIMENSION()
+DIMENSION::DIMENSION(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

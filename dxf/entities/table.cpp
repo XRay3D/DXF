@@ -1,6 +1,6 @@
 #include "table.h"
 
-TABLE::TABLE()
+TABLE::TABLE(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

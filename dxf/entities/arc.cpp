@@ -1,5 +1,6 @@
 #include "arc.h"
 
-ARC::ARC()
+ARC::ARC(SectionParser* sp)
+    : Entity(sp)
 {
 }

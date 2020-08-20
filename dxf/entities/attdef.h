@@ -1,5 +1,5 @@
 #pragma once
 #include "entity.h"
 struct ATTDEF final : Entity {
-    ATTDEF();
+    ATTDEF(SectionParser* sp);
 };

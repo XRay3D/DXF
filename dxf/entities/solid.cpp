@@ -1,68 +1,107 @@
 #include "solid.h"
+#include <QGraphicsPolygonItem>
+#include <QGraphicsScene>
+#include <QPolygonF>
+#include <dxf/dxf.h>
 
-SOLID::SOLID()
+extern QGraphicsScene* scene;
+
+SOLID::SOLID(SectionParser* sp)
+    : Entity(sp)
 {
 }
 
 void SOLID::draw() const
 {
-    //qDebug(Q_FUNC_INFO);
+    QPolygonF poly;
+    if (corners == 15) { //all
+        poly.reserve(5);
+        poly << firstCorner;
+        poly << secondCorner;
+        poly << fourthCorner;
+        poly << thirdCorner;
+        //        poly << firstCorner;
+    }
+    scene->addPolygon(poly, QPen(QColor(0, 0, 0, 100), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), QColor(0, 0, 0, 100))->setZValue(100);
+}
+
+void SOLID::drawInsert(INSERT_ET* i) const
+{
+    QPolygonF poly;
+    if (corners == 15) { //all
+        poly.reserve(5);
+        poly << firstCorner;
+        poly << secondCorner;
+        poly << fourthCorner;
+        poly << thirdCorner;
+        //        poly << firstCorner;
+    }
+    for (int r = 0; r < i->rowCount; ++r) {
+        for (int c = 0; c < i->colCount; ++c) {
+            QPointF tr(r * i->rowSpacing, r * i->colSpacing);
+            auto item = scene->addPolygon(poly, QPen(QColor(0, 255, 255, 100), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), QColor(0, 255, 255, 100));
+            item->setPos(i->insPt + tr);
+            item->setScale(i->scaleX /*, i->scaleY*/);
+            item->setRotation(i->rotationAngle);
+            item->setZValue(1);
+        }
+    }
 }
 
 void SOLID::parse(CodeData& code)
 {
-    //    do {
-    //        data << code;
-    //        switch (static_cast<VarType>(code.code)) {
-    //        case SubclassMarker:
-    //            break;
-    //        case Thickness:
-    //            thickness = code.getDouble();
-    //            break;
-    //        case FirstCornerX:
-    //            firstCorner.rx() = code.getDouble();
-    //            corners << FirstCornerX;
-    //            break;
-    //        case FirstCornerY:
-    //            firstCorner.ry() = code.getDouble();
-    //            break;
-    //        case FirstCornerZ:
-    //            break;
-    //        case SecondCornerX:
-    //            secondCorner.rx() = code.getDouble();
-    //            corners << SecondCornerX;
-    //            break;
-    //        case SecondCornerY:
-    //            secondCorner.ry() = code.getDouble();
-    //            break;
-    //        case SecondCornerZ:
-    //            break;
-    //        case ThirdCornerX:
-    //            thirdCorner.rx() = code.getDouble();
-    //            corners << ThirdCornerX;
-    //            break;
-    //        case ThirdCornerY:
-    //            thirdCorner.ry() = code.getDouble();
-    //            break;
-    //        case ThirdCornerZ:
-    //            break;
-    //        case FourthCornerX:
-    //            fourthCorner.rx() = code.getDouble();
-    //            corners << FourthCornerX;
-    //            break;
-    //        case FourthCornerY:
-    //            fourthCorner.ry() = code.getDouble();
-    //            break;
-    //        case FourthCornerZ:
-    //            break;
-    //        case ExtrDirX:
-    //            break;
-    //        case ExtrDirY:
-    //            break;
-    //        case ExtrDirZ:
-    //            break;
-    //        }
-    //        code = nextCode();
-    //    } while (code.code != 0);
-    //    code = DxfFile::ReadCodes(true);
+    do {
+        data << code;
+        switch (static_cast<VarType>(code.code)) {
+        case SubclassMarker:
+            break;
+        case Thickness:
+            thickness = code.getDouble();
+            break;
+        case FirstCornerX:
+            firstCorner.rx() = code.getDouble();
+            corners |= FirstCorner;
+            break;
+        case FirstCornerY:
+            firstCorner.ry() = code.getDouble();
+            break;
+        case FirstCornerZ:
+            break;
+        case SecondCornerX:
+            secondCorner.rx() = code.getDouble();
+            corners |= SecondCorner;
+            break;
+        case SecondCornerY:
+            secondCorner.ry() = code.getDouble();
+            break;
+        case SecondCornerZ:
+            break;
+        case ThirdCornerX:
+            thirdCorner.rx() = code.getDouble();
+            corners |= ThirdCorner;
+            break;
+        case ThirdCornerY:
+            thirdCorner.ry() = code.getDouble();
+            break;
+        case ThirdCornerZ:
+            break;
+        case FourthCornerX:
+            fourthCorner.rx() = code.getDouble();
+            corners |= FourthCorner;
+            break;
+        case FourthCornerY:
+            fourthCorner.ry() = code.getDouble();
+            break;
+        case FourthCornerZ:
+            break;
+        case ExtrDirX:
+            break;
+        case ExtrDirY:
+            break;
+        case ExtrDirZ:
+            break;
+        }
+        code = sp->nextCode();
+    } while (code.code != 0);
+    code = sp->prevCode();
 }

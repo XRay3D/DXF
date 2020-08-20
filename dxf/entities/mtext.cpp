@@ -1,6 +1,6 @@
 #include "mtext.h"
 
-MTEXT::MTEXT()
+MTEXT::MTEXT(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

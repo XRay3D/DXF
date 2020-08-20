@@ -1,6 +1,5 @@
 #pragma once
-#include "entity.h" 
- struct RAY final : Entity
-{
-    RAY();
+#include "entity.h"
+struct RAY final : Entity {
+    RAY(SectionParser* sp);
 };

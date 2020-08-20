@@ -1,6 +1,5 @@
 #pragma once
-#include "entity.h" 
- struct UNDERLAY final : Entity
-{
-    UNDERLAY();
+#include "entity.h"
+struct UNDERLAY final : Entity {
+    UNDERLAY(SectionParser* sp);
 };

@@ -1,6 +1,6 @@
 #include "section.h"
 
-SECTION::SECTION()
+SECTION::SECTION(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

@@ -1,6 +1,6 @@
 #include "viewport.h"
 
-VIEWPORT::VIEWPORT()
+VIEWPORT::VIEWPORT(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

@@ -2,16 +2,24 @@
 #include <QObject>
 
 #include <dxf/codedata.h>
+#include <dxf/section/sectionparser.h>
+
+struct INSERT_ET;
 
 #ifndef ENTITY_H
 #define ENTITY_H
+
 struct Entity {
+
     QVector<CodeData> data;
-    Entity();
+    SectionParser* sp = nullptr;
+    Entity(SectionParser* sp);
     virtual ~Entity() { }
     virtual void draw() const = 0;
+    virtual void drawInsert(INSERT_ET* i) const = 0;
     virtual void parse(CodeData& code) = 0;
     static int toType(const QString& key);
+
     enum Type {
         ACAD_PROXY_ENTITY,
         ARC,
@@ -59,6 +67,8 @@ struct Entity {
         //3DFACE,
         //3DSOLID,
     };
+
+    virtual Type type() const = 0;
 
     enum VarType {
 
@@ -180,7 +190,8 @@ struct Entity {
 #include "ray.h"
 #include "region.h"
 #include "section.h"
-#include "seqend.h"
+//#include "seqend.h"
+#include "insert.h"
 #include "shape.h"
 #include "solid.h"
 #include "spline.h"

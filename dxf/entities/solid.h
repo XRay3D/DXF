@@ -1,12 +1,14 @@
 #pragma once
 #include "entity.h"
 struct SOLID final : Entity {
-    SOLID();
+    SOLID(SectionParser* sp);
 
     // Entity interface
 public:
     void draw() const override;
+    void drawInsert(INSERT_ET* i) const override;
     void parse(CodeData& code) override;
+    Type type() const override { return Type::SOLID; }
 
     enum VarType {
         SubclassMarker = 100, // Маркер подкласса (AcDbTrace)
@@ -32,7 +34,13 @@ public:
         ExtrDirX = 210, // Направление выдавливания (необязательно; значение по умолчанию = 0, 0, 1)        //        Файл DXF: значение X; приложение: 3D-вектор
         ExtrDirY = 220, //        Файл DXF: значения Y и Z для направления выдавливания (необязательно)
         ExtrDirZ = 230
-
+    };
+    enum Corners {
+        NoCorner = 0,
+        FirstCorner = 1,
+        SecondCorner = 2,
+        ThirdCorner = 4,
+        FourthCorner = 8,
     };
 
     QPointF firstCorner;
@@ -40,7 +48,7 @@ public:
     QPointF thirdCorner;
     QPointF fourthCorner;
 
-    QVector<VarType> corners;
+    int corners = NoCorner;
 
     double thickness = 0;
     double radius = 0;

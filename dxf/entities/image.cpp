@@ -1,6 +1,6 @@
 #include "image.h"
 
-IMAGE::IMAGE()
+IMAGE::IMAGE(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

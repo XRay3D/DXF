@@ -1,6 +1,6 @@
 #include "helix.h"
 
-HELIX::HELIX()
+HELIX::HELIX(SectionParser *sp)
+    : Entity(sp)
 {
-
 }

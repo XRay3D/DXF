@@ -1,6 +1,6 @@
 #include "ray.h"
 
-RAY::RAY()
+RAY::RAY(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

@@ -1,6 +1,6 @@
 #include "body.h"
 
-BODY::BODY()
+BODY::BODY(SectionParser *sp)
+    : Entity(sp)
 {
-
 }

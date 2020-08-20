@@ -1,6 +1,6 @@
 #include "trace.h"
 
-TRACE::TRACE()
+TRACE::TRACE(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

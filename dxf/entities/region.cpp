@@ -1,6 +1,6 @@
 #include "region.h"
 
-REGION::REGION()
+REGION::REGION(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

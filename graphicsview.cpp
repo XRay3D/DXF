@@ -1,5 +1,6 @@
 #include "graphicsview.h"
 
+#include <QGLWidget>
 #include <QScrollBar>
 #include <QWheelEvent>
 
@@ -26,6 +27,7 @@ GraphicsView::GraphicsView(QWidget* parent)
     setRenderHint(QPainter::Antialiasing, true);
     scale(1.0, -1.0); //flip vertical
 
+    setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::AlphaChannel | QGL::Rgba)));
     ////////////////////////////////////
 }
 

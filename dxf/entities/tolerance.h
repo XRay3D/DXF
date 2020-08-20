@@ -1,6 +1,5 @@
 #pragma once
-#include "entity.h" 
- struct TOLERANCE final : Entity
-{
-    TOLERANCE();
+#include "entity.h"
+struct TOLERANCE final : Entity {
+    TOLERANCE(SectionParser* sp);
 };

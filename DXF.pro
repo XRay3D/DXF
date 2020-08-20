@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui opengl
 
 DESTDIR = $$_PRO_FILE_PWD_/bin
 

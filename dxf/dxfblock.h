@@ -8,9 +8,12 @@ struct SectionParser;
 
 struct DxfBlock {
     SectionParser* sp;
-    DxfBlock(SectionParser* sp);
+    DxfBlock(QMap<QString, DxfBlock*>& blocks ,SectionParser* sp = nullptr);
     ~DxfBlock();
+
     void parse(CodeData& code);
+    void parseHeader(CodeData& code);
+    void parseData(CodeData& code);
 
     enum VarType {
         EntityType = 0, // Тип объекта (BLOCK)
@@ -44,8 +47,6 @@ struct DxfBlock {
         BTF64 = 64, // это определение является связанной внешней ссылкой (игнорируется при вводе)
     };
 
-    bool bs = true;
-
     BTFlags flags = BTF0;
     QString blockName;
     QString layerName;
@@ -54,4 +55,5 @@ struct DxfBlock {
 
     QVector<CodeData> bData;
     QVector<Entity*> entities;
+    QMap<QString, DxfBlock*>& blocks;
 };

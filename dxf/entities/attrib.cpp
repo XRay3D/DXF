@@ -1,6 +1,6 @@
 #include "attrib.h"
 
-ATTRIB::ATTRIB()
+ATTRIB::ATTRIB(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

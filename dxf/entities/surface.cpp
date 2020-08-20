@@ -1,6 +1,6 @@
 #include "surface.h"
 
-SURFACE::SURFACE()
+SURFACE::SURFACE(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

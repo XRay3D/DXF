@@ -1,6 +1,6 @@
 #include "wipeout.h"
 
-WIPEOUT::WIPEOUT()
+WIPEOUT::WIPEOUT(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

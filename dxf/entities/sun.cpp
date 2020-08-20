@@ -1,6 +1,6 @@
 #include "sun.h"
 
-SUN::SUN()
+SUN::SUN(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

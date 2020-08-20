@@ -1,12 +1,15 @@
 #pragma once
 #include "entity.h"
 struct LINE final : Entity {
-    LINE();
+    LINE(SectionParser* sp);
 
     // Entity interface
 public:
     void draw() const override;
+    void drawInsert(INSERT_ET* i) const override { Q_UNUSED(i) }
+
     void parse(CodeData& code) override;
+    Type type() const override { return Type::LINE; }
 
     enum VarType {
         SubclassMarker = 100, // Маркер подкласса (AcDbLine)

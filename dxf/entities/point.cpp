@@ -1,6 +1,6 @@
 #include "point.h"
 
-POINT::POINT()
+POINT::POINT(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

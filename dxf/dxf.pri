@@ -44,7 +44,6 @@ HEADERS += \
      $$PWD/entities/ray.h \
      $$PWD/entities/region.h \
      $$PWD/entities/section.h \
-     $$PWD/entities/seqend.h \
      $$PWD/entities/shape.h \
      $$PWD/entities/solid.h \
      $$PWD/entities/spline.h \
@@ -59,14 +58,14 @@ HEADERS += \
      $$PWD/entities/viewport.h \
      $$PWD/entities/wipeout.h \
      $$PWD/entities/xline.h \
-     $$PWD/section/sectionblocks.h \
-     $$PWD/section/sectionclasses.h \
-     $$PWD/section/sectionentities.h \
-     $$PWD/section/sectionheader.h \
-     $$PWD/section/sectionobjects.h \
+    $$PWD/section/blocks.h \
+    $$PWD/section/classes.h \
+    $$PWD/section/entities.h \
+    $$PWD/section/header.h \
+    $$PWD/section/objects.h \
     $$PWD/section/sectionparser.h \
-     $$PWD/section/sectiontables.h \
-     $$PWD/section/sectionthumbnailimage.h \
+    $$PWD/section/tables.h \
+    $$PWD/section/thumbnailimage.h
 
 SOURCES += \
      $$PWD/codedata.cpp \
@@ -101,7 +100,6 @@ SOURCES += \
      $$PWD/entities/ray.cpp \
      $$PWD/entities/region.cpp \
      $$PWD/entities/section.cpp \
-     $$PWD/entities/seqend.cpp \
      $$PWD/entities/shape.cpp \
      $$PWD/entities/solid.cpp \
      $$PWD/entities/spline.cpp \
@@ -116,11 +114,11 @@ SOURCES += \
      $$PWD/entities/viewport.cpp \
      $$PWD/entities/wipeout.cpp \
      $$PWD/entities/xline.cpp \
-     $$PWD/section/sectionblocks.cpp \
-     $$PWD/section/sectionclasses.cpp \
-     $$PWD/section/sectionentities.cpp \
-     $$PWD/section/sectionheader.cpp \
-     $$PWD/section/sectionobjects.cpp \
+    $$PWD/section/blocks.cpp \
+    $$PWD/section/classes.cpp \
+    $$PWD/section/entities.cpp \
+    $$PWD/section/header.cpp \
+    $$PWD/section/objects.cpp \
     $$PWD/section/sectionparser.cpp \
-     $$PWD/section/sectiontables.cpp \
-     $$PWD/section/sectionthumbnailimage.cpp \
+    $$PWD/section/tables.cpp \
+    $$PWD/section/thumbnailimage.cpp

@@ -1,6 +1,6 @@
 #include "mleaderstyle.h"
 
-MLEADERSTYLE::MLEADERSTYLE()
+MLEADERSTYLE::MLEADERSTYLE(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

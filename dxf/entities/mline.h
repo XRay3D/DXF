@@ -1,6 +1,5 @@
 #pragma once
-#include "entity.h" 
- struct MLINE final : Entity
-{
-    MLINE();
+#include "entity.h"
+struct MLINE final : Entity {
+    MLINE(SectionParser* sp);
 };

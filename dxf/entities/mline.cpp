@@ -1,6 +1,6 @@
 #include "mline.h"
 
-MLINE::MLINE()
+MLINE::MLINE(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

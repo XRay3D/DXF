@@ -1,6 +1,6 @@
 #include "oleframe.h"
 
-OLEFRAME::OLEFRAME()
+OLEFRAME::OLEFRAME(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

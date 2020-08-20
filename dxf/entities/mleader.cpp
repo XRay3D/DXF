@@ -1,6 +1,6 @@
 #include "mleader.h"
 
-MLEADER::MLEADER()
+MLEADER::MLEADER(SectionParser *sp)
+    : Entity(sp)
 {
-
 }

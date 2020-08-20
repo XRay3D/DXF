@@ -1,6 +1,6 @@
 #include "shape.h"
 
-SHAPE::SHAPE()
+SHAPE::SHAPE(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

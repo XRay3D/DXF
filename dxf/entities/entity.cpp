@@ -2,7 +2,8 @@
 
 #include <QMetaEnum>
 
-Entity::Entity()
+Entity::Entity(SectionParser* sp)
+    : sp(sp)
 {
 }
 

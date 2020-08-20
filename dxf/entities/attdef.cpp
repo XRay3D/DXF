@@ -1,6 +1,6 @@
 #include "attdef.h"
 
-ATTDEF::ATTDEF()
+ATTDEF::ATTDEF(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

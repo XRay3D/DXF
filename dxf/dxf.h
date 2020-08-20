@@ -3,6 +3,7 @@
 // https://help.autodesk.com/view/OARX/2020/RUS/?guid=GUID-235B22E0-A567-4CF6-92D3-38A2306D73F3
 
 #include "codedata.h"
+#include "dxfblock.h"
 #include "dxfheader.h"
 #include <QFile>
 #include <QObject>
@@ -25,7 +26,6 @@ private:
     QFile file;
     QTextStream in;
     QVector<SectionParser*> sections;
+    QMap<QString, DxfBlock*> blocks;
     DxfHeader header;
-
-signals:
 };

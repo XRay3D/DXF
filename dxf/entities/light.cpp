@@ -1,6 +1,6 @@
 #include "light.h"
 
-LIGHT::LIGHT()
+LIGHT::LIGHT(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

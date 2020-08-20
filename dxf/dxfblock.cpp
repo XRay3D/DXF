@@ -1,16 +1,29 @@
 #include "dxfblock.h"
 #include "dxf.h"
 
-#include <section/sectionentities.h>
+#include <section/entities.h>
 
-DxfBlock::DxfBlock(SectionParser* sp)
+DxfBlock::DxfBlock(QMap<QString, DxfBlock*>& blocks, SectionParser* sp)
     : sp(sp)
+    , blocks(blocks)
 {
 }
 
-DxfBlock::~DxfBlock() { qDeleteAll(entities); }
+DxfBlock::~DxfBlock()
+{ /*qDeleteAll(entities);*/
+}
 
 void DxfBlock::parse(CodeData& code)
+{
+    parseHeader(code);
+    parseData(code);
+    do {
+        code = sp->nextCode();
+    } while (code.code != 0);
+    code = sp->prevCode();
+}
+
+void DxfBlock::parseHeader(CodeData& code)
 {
     do { // Block header
         bData.append(code);
@@ -57,24 +70,18 @@ void DxfBlock::parse(CodeData& code)
         }
         code = sp->nextCode();
     } while (code.code != 0);
-    // Прочитать другую пару код / значение
-    //    code = nextCode();
-    //    //code = nextCode();
-    do {
+}
 
-        bs = false;
-        SectionENTITIES se(code);
+void DxfBlock::parseData(CodeData& code)
+{
+    do {
+        if (code.rawVal == "ENDBLK")
+            break;
+        SectionENTITIES se(blocks, code, sp);
         entities = se.entities;
         se.entities.clear();
-        if (code.rawVal != "ENDBLK")
+        if (code.rawVal == "ENDBLK")
             break;
-
         code = sp->nextCode();
     } while (code.rawVal != "ENDBLK");
-
-    do {
-        code = sp->nextCode();
-    } while (code.code != 0);
-
-    code = sp->prevCode();
 }

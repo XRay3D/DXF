@@ -1,6 +1,5 @@
 #pragma once
-#include "entity.h" 
- struct ELLIPSE final : Entity
-{
-    ELLIPSE();
+#include "entity.h"
+struct ELLIPSE final : Entity {
+    ELLIPSE(SectionParser* sp);
 };

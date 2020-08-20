@@ -2,5 +2,4 @@
 
 VERTEX::VERTEX()
 {
-
 }

@@ -1,5 +1,5 @@
 #pragma once
 #include "entity.h"
 struct BODY final : Entity {
-    BODY();
+    BODY(SectionParser* sp);
 };

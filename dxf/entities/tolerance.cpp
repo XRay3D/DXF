@@ -1,6 +1,6 @@
 #include "tolerance.h"
 
-TOLERANCE::TOLERANCE()
+TOLERANCE::TOLERANCE(SectionParser* sp)
+    : Entity(sp)
 {
-
 }

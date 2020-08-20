@@ -1,6 +1,5 @@
 #pragma once
-#include "entity.h" 
- struct WIPEOUT final : Entity
-{
-    WIPEOUT();
+#include "entity.h"
+struct WIPEOUT final : Entity {
+    WIPEOUT(SectionParser* sp);
 };

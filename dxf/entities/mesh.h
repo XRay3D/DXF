@@ -1,6 +1,5 @@
 #pragma once
-#include "entity.h" 
- struct MESH final : Entity
-{
-    MESH();
+#include "entity.h"
+struct MESH final : Entity {
+    MESH(SectionParser* sp);
 };

@@ -4,9 +4,11 @@
 #include <QVector>
 
 struct Entity;
+struct SectionParser;
 
 struct DxfBlock {
-    DxfBlock();
+    SectionParser* sp;
+    DxfBlock(SectionParser* sp);
     ~DxfBlock();
     void parse(CodeData& code);
 

@@ -1,6 +1,6 @@
 #include "sectionobjects.h"
 
-SectionOBJECTS::SectionOBJECTS(const QVector<CodeData>& data)
-    : SectionParser(data)
+SectionOBJECTS::SectionOBJECTS(QVector<CodeData>&& data)
+    : SectionParser(std::move(data))
 {
 }

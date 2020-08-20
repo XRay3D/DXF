@@ -46,6 +46,6 @@ public:
     double endWidth;
     double constantWidth;
     int elevation;
-    int thickness;
+    double thickness;
     int bulge = 0.0;
 };

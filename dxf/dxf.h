@@ -17,15 +17,14 @@ class DxfFile : public QObject {
 public:
     explicit DxfFile(QObject* parent = nullptr);
     ~DxfFile();
-    void read(const QString& fileName, QString strSection = {}, QString strObject = {}, QString strCodeList = {});
-    static CodeData ReadCodes(bool retract = false);
+    void read(const QString& fileName);
 
 private:
+    int ctr = 0;
     static DxfFile* self;
     QFile file;
     QTextStream in;
     QVector<SectionParser*> sections;
-    QVector<CodeData> cd;
     DxfHeader header;
 
 signals:

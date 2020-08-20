@@ -4,7 +4,7 @@
 #include <dxfheader.h>
 
 struct SectionHEADER final : SectionParser {
-    SectionHEADER(DxfHeader& header, const QVector<CodeData>& data);
+    SectionHEADER(DxfHeader& header, QVector<CodeData>&& data);
     virtual ~SectionHEADER() = default;
     // Section interface
     void parse() override;

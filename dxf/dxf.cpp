@@ -2,7 +2,6 @@
 #include "section/sectionentities.h"
 #include "section/sectionparser.h"
 #include <QDebug>
-#include <QMetaEnum>
 #include <dxf/section/sectionblocks.h>
 #include <dxf/section/sectionclasses.h>
 #include <dxf/section/sectionheader.h>
@@ -19,138 +18,61 @@ DxfFile::DxfFile(QObject* parent)
 }
 
 DxfFile::~DxfFile() { qDeleteAll(sections); }
-// read извлекает указанные пары код / значение из файла DXF.
-// Для этой функции требуются четыре строковых параметра,
-// допустимое имя файла DXF, имя раздела DXF,
-// имя объекта в этом разделе и список кодов, разделенных запятыми.
 
-void DxfFile::read(const QString& fileName,
-    QString /*strSection*/,
-    QString /*strObject*/,
-    QString /*strCodeList*/)
+void DxfFile::read(const QString& fileName)
 {
+
     //    Open dxfFile For Input As #1
     file.setFileName(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 
     in.setDevice(&file);
-    while (!in.atEnd()) {
-        QString codeStr, valStr;
-        codeStr = in.readLine();
-        valStr = in.readLine();
-        cd.append({ codeStr.toInt(), valStr });
-    }
-
-    QString ReadDXF;
-    QString tmpCode;
-    QString lastObj;
+    //    while (!in.atEnd()) {
+    //    }
 
     QVector<CodeData> codes;
-    codes << ReadCodes();
-    while (codes.last().rawVal != "EOF") {
-        switch (SectionParser ::key(codes.last().rawVal)) {
-        case SectionParser::HEADER:
-            sections << new SectionHEADER(header, codes);
+    do {
+        QString codeStr(in.readLine());
+        QString valStr(in.readLine());
+        codes.append({ codeStr.toInt(), valStr });
+        if (codes.last().rawVal == "ENDSEC") {
+            qDebug() << codes[0];
+            qDebug() << codes[1];
+            qDebug() << codes.last();
+            qDebug("\n");
+            switch (SectionParser::key(codes[1].rawVal)) {
+            case SectionParser::HEADER:
+                sections << new SectionHEADER(header, std::move(codes));
+                break;
+            case SectionParser::CLASSES:
+                sections << new SectionCLASSES(std::move(codes));
+                break;
+            case SectionParser::TABLES:
+                sections << new SectionTABLES(std::move(codes));
+                break;
+            case SectionParser::BLOCKS:
+                sections << new SectionBLOCKS(std::move(codes));
+                break;
+            case SectionParser::ENTITIES:
+                sections << new SectionENTITIES(std::move(codes));
+                break;
+            case SectionParser::OBJECTS:
+                sections << new SectionOBJECTS(std::move(codes));
+                break;
+            case SectionParser::THUMBNAILIMAGE:
+                sections << new SectionTHUMBNAILIMAGE(std::move(codes));
+                break;
+            default:
+                //throw codes.last().rawVal;
+                break;
+            }
             sections.last()->parse();
-            break;
-        case SectionParser::CLASSES:
-            sections << new SectionCLASSES(codes);
-            sections.last()->parse();
-            break;
-        case SectionParser::TABLES:
-            sections << new SectionTABLES(codes);
-            sections.last()->parse();
-            break;
-        case SectionParser::BLOCKS:
-            sections << new SectionBLOCKS(codes);
-            sections.last()->parse();
-            break;
-        case SectionParser::ENTITIES:
-            sections << new SectionENTITIES(codes);
-            sections.last()->parse();
-            break;
-        case SectionParser::OBJECTS:
-            sections << new SectionOBJECTS(codes);
-            sections.last()->parse();
-            break;
-        case SectionParser::THUMBNAILIMAGE:
-            sections << new SectionTHUMBNAILIMAGE(codes);
-            sections.last()->parse();
-            break;
-        default:
-            //throw codes.last().rawVal;
-            break;
         }
-        //        if (!sections.isEmpty() && sections.last()->data.size() < 3)
-        //            sections.last()->parse();
-        codes << ReadCodes();
-    }
-    //    // Получите первую пару код / значение
-    //    auto codes = ReadCodes();
-    //    section->data << codes;
-    //    // Прокрутите весь файл до строки "EOF"
-    //    while (codes.rawVal != "EOF") {
-    //        // если код группы «0» и значение «SECTION» ..
-    //        if (codes.code == 0 && codes.rawVal == "SECTION") {
-    //            // Это должен быть новый раздел, поэтому получите следующую пару код / значение.
-    //            codes = ReadCodes();
-    //            section->data << codes;
-    //            section->type = static_cast<Section::sec>(section.staticMetaObject.enumerator(0).keyToValue(codes.sVal.toStdString().data()));
-    //            strSection = codes.rawVal; ///////////// для отладки
-    //            // если этот раздел правильный ..
-    //            if (codes.rawVal == strSection) {
-    //                // Получите следующую пару код / значение и ..
-    //                codes = ReadCodes();
-    //                section->data << codes;
-    //                // Прокрутите этот раздел до тех пор, пока не появится надпись «ENDSEC».
-    //                while (codes.rawVal != "ENDSEC") {
-    //                    // В разделе все коды «0» обозначают объект. если вы найдете «0», сохраните имя объекта для будущего использования.
-    //                    if (codes.code == 0)
-    //                        lastObj = codes.rawVal;
-    //                    // если этот объект вас интересует
-    //                    if (lastObj == strObject) {
-    //                        // Обведите код запятыми
-    //                        tmpCode = "," + QString::number(codes.code) + ",";
-    //                        // если этот код есть в списке кодов ..
-    //                        if (strCodeList.indexOf(tmpCode, 0, Qt::CaseInsensitive) > -1) {
-    //                            // Добавьте возвращаемое значение.
-    //                            ReadDXF = ReadDXF + codes.code + "=" + codes.rawVal + '\r';
-    //                        }
-    //                    }
-    //                    // Прочитать другую пару код / значение
-    //                    codes = ReadCodes();
-    //                    section->data << codes;
-    //                }
-    //                sections << section;
-    //                section = {}; //clear
-    //            }
-    //        } else {
-    //            codes = ReadCodes();
-    //            section->data << codes;
-    //        }
-    //    }
+    } while (!in.atEnd() || codes.last().rawVal != "EOF");
+
     file.close();
     for (SectionParser* s : sections) {
         qDebug() << (*s);
     }
-}
-
-// ReadCodes reads two lines from an open file and returns a two item
-// array, a group code and its value. As long as a DXF file is read
-// two lines at a time, all should be fine. However, to make your
-// code more reliable, you should add some additional error and
-// other checking.
-CodeData DxfFile::ReadCodes(bool retract)
-{
-    static int ctr = 0;
-    if (retract)
-        return self->cd[--ctr];
-    else
-        return self->cd[ctr++];
-}
-
-int SectionParser::key(const QString& key)
-{
-    return staticMetaObject.enumerator(0).keysToValue(key.toLocal8Bit().data());
 }

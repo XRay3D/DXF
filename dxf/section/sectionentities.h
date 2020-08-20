@@ -9,7 +9,7 @@
 /// \brief The SectionENTITIES struct
 ///
 struct SectionENTITIES final : SectionParser {
-    explicit SectionENTITIES(const QVector<CodeData>& data);
+    explicit SectionENTITIES(QVector<CodeData>&& data);
     SectionENTITIES(CodeData& code);
 
     virtual ~SectionENTITIES() { qDeleteAll(entities); }

@@ -3,26 +3,24 @@
 #include <QTreeWidget>
 #include <dxf/dxf.h>
 
-SectionHEADER::SectionHEADER(DxfHeader& header, const QVector<CodeData>& data)
-    : SectionParser(data)
+SectionHEADER::SectionHEADER(DxfHeader& header, QVector<CodeData>&& data)
+    : SectionParser(std::move(data))
     , header(header)
 {
 }
 
 void SectionHEADER::parse()
 {
-    qDebug(Q_FUNC_INFO);
     CodeData code;
     QString key;
     while (code.rawVal != "ENDSEC") {
         // Прочитать другую пару код / значение
-        code = DxfFile::ReadCodes();
-        data << code;
+        code = nextCode();
         if (code.rawVal.startsWith('$')) {
             key = code.rawVal;
         } else if (code.rawVal == "ENDSEC") {
             break;
-        } else {
+        } else if (!key.isEmpty()) {
             switch (code.type) {
             case CodeData::String:
                 header.data[key][code.code] = std::get<QString>(code._val);
@@ -36,10 +34,9 @@ void SectionHEADER::parse()
             }
         }
     }
-    //    qDebug() << hData;
-    //    qDebug() << hData.keys();
     if constexpr (0) {
         auto tw = new QTreeWidget();
+        tw->setWindowTitle("Section HEADER");
         tw->setColumnCount(2);
         auto iPar = header.data.constBegin();
         QList<QTreeWidgetItem*> items;
@@ -48,7 +45,7 @@ void SectionHEADER::parse()
             {
                 auto iVal = iPar.value().constBegin();
                 while (iVal != iPar.value().constEnd()) {
-                    items.last()->addChild(new QTreeWidgetItem((QTreeWidget*)0, QStringList { QString::number(iVal.key()), iVal.value().toString() }));
+                    items.last()->addChild(new QTreeWidgetItem(static_cast<QTreeWidget*>(nullptr), { QString::number(iVal.key()), iVal.value().toString() }));
                     ++iVal;
                 }
             }

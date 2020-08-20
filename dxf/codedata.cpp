@@ -127,3 +127,9 @@ CodeData::CodeData(int code, const QString& val)
         _val = static_cast<qint64>(val.toLongLong());
     }
 }
+
+double CodeData::getDouble() const { return std::get<Double>(_val); }
+
+qint64 CodeData::getInteger() const { return std::get<Integer>(_val); }
+
+QString CodeData::getString() const { return std::get<String>(_val); }

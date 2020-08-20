@@ -10,7 +10,8 @@ POLYLINE::POLYLINE()
 }
 
 void POLYLINE::draw() const
-{    qDebug(Q_FUNC_INFO);
+{
+    qDebug(Q_FUNC_INFO);
 
     QPolygonF poly;
     QPointF pt;
@@ -35,10 +36,10 @@ void POLYLINE::draw() const
 
 void POLYLINE::parse(CodeData& code)
 {
-    data << code;
-    while (code.rawVal != "SEQEND") {
-        // Прочитать другую пару код / значение
-        code = DxfFile::ReadCodes();
-        data << code;
-    }
+    //    data << code;
+    //    while (code.rawVal != "SEQEND") {
+    //        // Прочитать другую пару код / значение
+    //        code = nextCode();
+    //        data << code;
+    //    }
 }

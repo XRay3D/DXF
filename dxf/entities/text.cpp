@@ -1,7 +1,5 @@
 #include "text.h"
 
-#include <dxf.h>
-
 TEXT::TEXT()
 {
 }
@@ -13,10 +11,10 @@ void TEXT::draw() const
 
 void TEXT::parse(CodeData& code)
 {
-    do {
-        data << code;
-        code = DxfFile::ReadCodes();
-    } while (code.code != 0);
-    qDebug() << "TEXT" << data;
-    code = DxfFile::ReadCodes(true);
+    //    do {
+    //        data << code;
+    //        code = nextCode();
+    //    } while (code.code != 0);
+    //    qDebug() << "TEXT" << data;
+    //    code = DxfFile::ReadCodes(true);
 }

@@ -6,6 +6,7 @@
 using var = std::variant<double, qint64, QString>;
 
 struct CodeData {
+    CodeData(int code = 0, const QString& val = {});
 
     friend QDebug operator<<(QDebug debug, const CodeData& c)
     {
@@ -20,11 +21,9 @@ struct CodeData {
         String,
     };
 
-    CodeData(int code = 0, const QString& val = {});
-
-    double getDouble() { return std::get<Double>(_val); }
-    qint64 getInteger() { return std::get<Integer>(_val); }
-    QString getString() { return std::get<String>(_val); }
+    double getDouble() const;
+    qint64 getInteger() const;
+    QString getString() const;
 
     int code = 0;
     Type type = String;

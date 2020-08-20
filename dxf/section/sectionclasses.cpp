@@ -1,6 +1,6 @@
 #include "sectionclasses.h"
 
-SectionCLASSES::SectionCLASSES(const QVector<CodeData>& data)
-    : SectionParser(data)
+SectionCLASSES::SectionCLASSES(QVector<CodeData>&& data)
+    : SectionParser(std::move(data))
 {
 }

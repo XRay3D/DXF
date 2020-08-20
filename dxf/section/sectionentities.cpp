@@ -7,50 +7,51 @@
 
 extern QGraphicsScene* scene;
 
-SectionENTITIES::SectionENTITIES(const QVector<CodeData>& data)
-    : SectionParser(data)
+SectionENTITIES::SectionENTITIES(QVector<CodeData>&& data)
+    : SectionParser(std::move(data))
 {
 }
 
 SectionENTITIES::SectionENTITIES(CodeData& code)
     : SectionParser({ {}, {} })
 {
-    qDebug(Q_FUNC_INFO);
-    while (code.rawVal != "ENDBLK") {
-        // Прочитать другую пару код / значение
-        //        code = DxfFile::ReadCodes();
-        //        if (code.rawVal == "ENDBLK" || code.rawVal == "BLOCK")
-        //            break;
-        iParse(code);
-        if (code.rawVal == "ENDBLK" || code.rawVal == "BLOCK")
-            break;
-    }
+    //    qDebug(Q_FUNC_INFO);
+    //    while (code.rawVal != "ENDBLK") {
+    //        // Прочитать другую пару код / значение
+    //        //        code = nextCode();
+    //        //        if (code.rawVal == "ENDBLK" || code.rawVal == "BLOCK")
+    //        //            break;
+    //        iParse(code);
+    //        if (code.rawVal == "ENDBLK" || code.rawVal == "BLOCK")
+    //            break;
+    //        code = nextCode();
+    //    }
 }
 
 void SectionENTITIES::parse()
 {
-    qDebug(Q_FUNC_INFO);
-    while (code.rawVal != "ENDSEC") {
-        // Прочитать другую пару код / значение
-        code = DxfFile::ReadCodes();
-        data << code;
-        if (code.rawVal == "ENDSEC")
-            break;
-        iParse(code);
-    }
+    //    qDebug(Q_FUNC_INFO);
+    //    while (code.rawVal != "ENDSEC") {
+    //        // Прочитать другую пару код / значение
+    //        code = nextCode();
+    //        data << code;
+    //        if (code.rawVal == "ENDSEC")
+    //            break;
+    //        iParse(code);
+    //    }
 
-    for (auto e : entities) {
-        e->draw();
-    }
+    //    for (auto e : entities) {
+    //        e->draw();
+    //    }
 
-    QTimer::singleShot(100, [] {
-        auto r = scene->itemsBoundingRect();
-        r.moveTopLeft(r.topLeft() + QPointF { +1, +1 });
-        r.moveBottomRight(r.bottomRight() + QPointF { -1, -1 });
-        scene->setSceneRect(r);
-        reinterpret_cast<QGraphicsView*>(scene->parent())->scale(100, 100);
-        reinterpret_cast<QGraphicsView*>(scene->parent())->fitInView(scene->itemsBoundingRect(), Qt::KeepAspectRatio);
-    });
+    //    QTimer::singleShot(100, [] {
+    //        auto r = scene->itemsBoundingRect();
+    //        r.moveTopLeft(r.topLeft() + QPointF { +1, +1 });
+    //        r.moveBottomRight(r.bottomRight() + QPointF { -1, -1 });
+    //        scene->setSceneRect(r);
+    //        reinterpret_cast<QGraphicsView*>(scene->parent())->scale(100, 100);
+    //        reinterpret_cast<QGraphicsView*>(scene->parent())->fitInView(scene->itemsBoundingRect(), Qt::KeepAspectRatio);
+    //    });
 }
 
 void SectionENTITIES::iParse(CodeData& code)
@@ -155,7 +156,7 @@ void SectionENTITIES::iParse(CodeData& code)
         //            entities[key].last() << code;
         //            while (key == Entity::POLYLINE && code.rawVal != "SEQEND") {
         //                // Прочитать другую пару код / значение
-        //                code = DxfFile::ReadCodes();
+        //                code = nextCode();
         //                data << code;
         //                entities[key].last() << code;
         //            }

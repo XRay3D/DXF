@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QApplication>
+#include <QSettings>
 //#include <libdxfrw/src/libdxfrw.h>
 //#include <libdxfrw/src/mydrwinterface.h>
 
@@ -13,21 +14,31 @@ MainWindow::MainWindow(QWidget* parent)
     ui->setupUi(this);
     ui->graphicsView->setScene(scene = new QGraphicsScene(ui->graphicsView));
     ui->graphicsView->scene()->setObjectName("scene");
+
+    {
+        QSettings s("dxf.ini", QSettings::IniFormat);
+        restoreState(s.value("State").toByteArray());
+        restoreGeometry(s.value("Geometry").toByteArray());
+        ui->lineEdit->setText(s.value("lineEdit").toString());
+    }
+
     on_pushButton_clicked();
 }
 
 MainWindow::~MainWindow()
 {
+    {
+        QSettings s("dxf.ini", QSettings::IniFormat);
+        s.setValue("State", saveState());
+        s.setValue("Geometry", saveGeometry());
+        s.setValue("lineEdit", ui->lineEdit->text());
+    }
     delete ui;
 }
 
 void MainWindow::on_pushButton_clicked()
 {
-    //const QString str("D:/PRO/VBA/Новая папка/1.dxf");
-    const QString str("D:/MAN2/МАН2_SCH_PCB/V2/МАН2_МСИС_V2_.dxf");
+    scene->clear();
+    const QString str(ui->lineEdit->text());
     dxf.read(str);
-
-    //    dxfRW dxf(str.toLocal8Bit().data());
-    //    MyDRWInterface ifs;
-    //    qDebug() << "dxf.read" << dxf.read(&ifs, true);
 }

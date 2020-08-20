@@ -1,6 +1,6 @@
 #include "sectionthumbnailimage.h"
 
-SectionTHUMBNAILIMAGE::SectionTHUMBNAILIMAGE(const QVector<CodeData>& data)
-    : SectionParser(data)
+SectionTHUMBNAILIMAGE::SectionTHUMBNAILIMAGE(QVector<CodeData>&& data)
+    : SectionParser(std::move(data))
 {
 }

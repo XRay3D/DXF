@@ -41,13 +41,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
+    ui->tableView->setModel(nullptr);
     scene->clear();
     const QString str(ui->lineEdit->text());
-    dxf.read(str);
-
-    ui->tableView->setModel(new LayerModel(dxf.layers));
-    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    if (dxf.read(str)) {
+        ui->tableView->setModel(new LayerModel(dxf.layers));
+        ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
     //    testReading(ui->lineEdit->text().toLocal8Bit().data());
 }
 

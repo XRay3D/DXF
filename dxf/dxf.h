@@ -19,7 +19,7 @@ class DxfFile : public QObject {
 public:
     explicit DxfFile(QObject* parent = nullptr);
     ~DxfFile();
-    void read(const QString& fileName);
+    bool read(const QString& fileName);
     static LAYER* layer(const QString& name) { return self->layers.value(name, nullptr); }
 
     QMap<QString, LAYER*> layers;

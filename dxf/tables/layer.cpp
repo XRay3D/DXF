@@ -42,5 +42,4 @@ void LAYER::parse(CodeData& code)
         }
         code = sp->nextCode();
     } while (code.code != 0);
-    qDebug() << "LAYER(" << name << colorNumber << ")";
 }

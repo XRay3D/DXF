@@ -54,5 +54,4 @@ void HATCH::parse(CodeData& code)
         code = sp->nextCode();
         parseEntity(code);
     } while (code.code != 0);
-    code = sp->prevCode();
 }

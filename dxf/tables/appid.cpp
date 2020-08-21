@@ -21,6 +21,4 @@ void APPID::parse(CodeData& code)
             break;
         }
     } while (code.code != 0);
-//    code = sp->prevCode();
-    qDebug() << "APPID(" << applicationName << standardFlag << ")";
 }

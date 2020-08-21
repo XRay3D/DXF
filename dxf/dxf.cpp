@@ -19,13 +19,13 @@ DxfFile::DxfFile(QObject* parent)
 
 DxfFile::~DxfFile() { qDeleteAll(sections); }
 
-void DxfFile::read(const QString& fileName)
+bool DxfFile::read(const QString& fileName)
 {
 
     //    Open dxfFile For Input As #1
     file.setFileName(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return;
+        return false;
 
     in.setDevice(&file);
     //    while (!in.atEnd()) {
@@ -71,4 +71,5 @@ void DxfFile::read(const QString& fileName)
     for (SectionParser* s : sections) {
         qDebug() << (*s);
     }
+    return true;
 }

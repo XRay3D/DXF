@@ -43,11 +43,11 @@ public:
     QPolygonF poly;
     int counter = 0;
     int polylineFlag = 0;
-    int numberOfVertices;
-    double startWidth;
-    double endWidth;
-    double constantWidth;
-    int elevation;
-    double thickness;
-    int bulge = 0.0;
+    int numberOfVertices = 0;
+    double startWidth = 0.0;
+    double endWidth = 0.0;
+    double constantWidth = 0.0;
+    int elevation = 0;
+    double thickness = 0.0;
+    double bulge = 0.0;
 };

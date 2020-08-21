@@ -26,9 +26,12 @@ void Entity::parseEntity(CodeData& code)
 
 QColor Entity::color() const
 {
-    if (DxfFile::layer(layerName))
-        return dxfColors[DxfFile::layer(layerName)->colorNumber];
-    return QColor(0, 0, 0, 50);
+    if (DxfFile::layer(layerName)) {
+        QColor c(dxfColors[DxfFile::layer(layerName)->colorNumber]);
+        c.setAlpha(255);
+        return c;
+    }
+    return QColor(0, 0, 0, 255);
 }
 
 void Entity::attachToLayer(QGraphicsItem* item) const

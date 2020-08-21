@@ -86,5 +86,4 @@ void INSERT_ET::parse(CodeData& code)
         }
         code = sp->nextCode();
     } while (code.code != 0);
-    code = sp->prevCode();
 }

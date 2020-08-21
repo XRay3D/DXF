@@ -21,7 +21,6 @@ SectionENTITIES::SectionENTITIES(QMap<QString, Block*>& blocks, CodeData& code, 
 {
     do {
         iParse(code);
-        code = sp->nextCode();
     } while (code.rawVal != "ENDBLK");
 }
 
@@ -29,9 +28,8 @@ void SectionENTITIES::parse()
 {
     code = nextCode();
     code = nextCode();
+    code = nextCode();
     while (code.rawVal != "ENDSEC") {
-        // Прочитать другую пару код / значение
-        code = nextCode();
         if (code.rawVal == "ENDSEC")
             break;
         iParse(code);

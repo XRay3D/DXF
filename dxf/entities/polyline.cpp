@@ -14,6 +14,7 @@ POLYLINE::POLYLINE(SectionParser* sp)
 
 void POLYLINE::draw() const
 {
+
     QPolygonF poly;
     QPointF pt;
     double width = 0;

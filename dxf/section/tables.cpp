@@ -11,14 +11,12 @@ SectionTABLES::SectionTABLES(QMap<QString, LAYER*>& layers, QVector<CodeData>&& 
 
 void SectionTABLES::parse()
 {
-    qDebug(Q_FUNC_INFO);
     CodeData code;
     code = nextCode();
     code = nextCode();
     while (code.rawVal != "ENDSEC") {
         // Прочитать другую пару код / значение
         code = nextCode();
-        qDebug() << "TABLE" << code;
         if (code.rawVal == "TABLE") {
             tables.resize(tables.size() + 1);
             code = nextCode();
@@ -65,9 +63,5 @@ void SectionTABLES::parse()
                 }
             } while (code.rawVal != "ENDTAB");
         }
-    }
-    qDebug() << tables.size();
-    for (auto t : tables) {
-        qDebug() << t.size() << t;
     }
 }

@@ -18,12 +18,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 include(dxf/dxf.pri)
+include(src/dxflib.pri)
+
 #include(libdxfrw/src/libdxfrw.pri)
 
 SOURCES += \
     graphicsview.cpp \
     main.cpp \
     mainwindow.cpp \
+    examples/readwrite/test_creationclass.cpp \
+    examples/readwrite/test_creationclass.h \
 
 HEADERS += \
     graphicsview.h \
@@ -36,4 +40,24 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    examples/readwrite/demo.dxf \
+    examples/readwrite/main.cpp \
+    examples/readwrite/main.cpp \
+    examples/readwrite/msvc_make.bat \
+    examples/readwrite/myfile.dxf \
+    examples/readwrite/test.pro \
+    examples/writedimension/dimension.dxf \
+    examples/writedimension/main.cpp \
+    examples/writedimension/main.cpp \
+    examples/writedimension/writedimension.pro \
+    examples/writehatch/hatch.dxf \
+    examples/writehatch/main.cpp \
+    examples/writehatch/writehatch.pro
+
+#SUBDIRS += \
+#    examples/readwrite/test.pro \
+#    examples/writedimension/writedimension.pro \
+#    examples/writehatch/writehatch.pro
 

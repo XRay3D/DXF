@@ -24,5 +24,8 @@ private slots:
 private:
     DxfFile dxf;
     Ui::MainWindow* ui;
+
+    void testReading(char* file);
+
 };
 

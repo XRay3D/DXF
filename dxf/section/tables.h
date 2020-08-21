@@ -1,10 +1,14 @@
 #pragma once
 #include "sectionparser.h"
 
+struct TableItem;
+struct LAYER;
+
 struct SectionTABLES final : SectionParser {
-    SectionTABLES(QVector<CodeData>&& data);
+    SectionTABLES(QMap<QString, LAYER*> &layers,QVector<CodeData>&& data);
     virtual ~SectionTABLES() = default;
     // Section interface
     void parse() override;
-    QVector<QVector<CodeData>> tables;
+    QVector<QVector<TableItem*>> tables;
+    QMap<QString, LAYER*> &layers;
 };

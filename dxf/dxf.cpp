@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <dxf/section/blocks.h>
 #include <dxf/section/classes.h>
-#include <dxf/section/header.h>
+#include <dxf/section/headerparser.h>
 #include <dxf/section/objects.h>
 #include <dxf/section/tables.h>
 #include <dxf/section/thumbnailimage.h>
@@ -45,7 +45,7 @@ void DxfFile::read(const QString& fileName)
                 sections << new SectionCLASSES(std::move(codes));
                 break;
             case SectionParser::TABLES:
-                sections << new SectionTABLES(std::move(codes));
+                sections << new SectionTABLES(layers, std::move(codes));
                 break;
             case SectionParser::BLOCKS:
                 sections << new SectionBLOCKS(blocks, std::move(codes));

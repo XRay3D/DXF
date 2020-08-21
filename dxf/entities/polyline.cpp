@@ -33,7 +33,7 @@ void POLYLINE::draw() const
             width = std::get<double>(d._val);
         }
     }
-    scene->addPolygon(poly, QPen(QColor(0, 0, 0, 100), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush);
+    attachToLayer(scene->addPolygon(poly, QPen(color(), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush));
 }
 
 void POLYLINE::drawInsert(INSERT_ET* i) const
@@ -59,10 +59,11 @@ void POLYLINE::drawInsert(INSERT_ET* i) const
     for (int r = 0; r < i->rowCount; ++r) {
         for (int c = 0; c < i->colCount; ++c) {
             QPointF tr(r * i->rowSpacing, r * i->colSpacing);
-            auto item = scene->addPolygon(poly, QPen(QColor(0, 255, 255, 100), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush);
+            auto item = scene->addPolygon(poly, QPen(i->color(), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush);
             item->setPos(i->insPt + tr);
             item->setScale(i->scaleX /*, i->scaleY*/);
             item->setRotation(i->rotationAngle);
+            i->attachToLayer(item);
         }
     }
 }
@@ -74,5 +75,6 @@ void POLYLINE::parse(CodeData& code)
         // Прочитать другую пару код / значение
         code = sp->nextCode();
         data << code;
+        parseEntity(code);
     }
 }

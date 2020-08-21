@@ -1,4 +1,5 @@
 #include "line.h"
+#include <QGraphicsItem>
 #include <QGraphicsScene>
 
 extern QGraphicsScene* scene;
@@ -10,7 +11,7 @@ LINE::LINE(SectionParser* sp)
 
 void LINE::draw() const
 {
-    scene->addLine({ startPoint, endPoint }, QPen(QColor(0, 0, 0, 100), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    attachToLayer(scene->addLine({ startPoint, endPoint }, QPen(color(), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)));
 }
 
 void LINE::parse(CodeData& code)
@@ -45,6 +46,8 @@ void LINE::parse(CodeData& code)
             break;
         case ExtrDirZ:
             break;
+        default:
+            parseEntity(code);
         }
         code = sp->nextCode();
     } while (code.code != 0);

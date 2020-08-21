@@ -22,7 +22,7 @@ void SOLID::draw() const
         poly << thirdCorner;
         //        poly << firstCorner;
     }
-    scene->addPolygon(poly, QPen(QColor(0, 0, 0, 100), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), QColor(0, 0, 0, 100))->setZValue(100);
+    attachToLayer(scene->addPolygon(poly, QPen(color(), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), color()));
 }
 
 void SOLID::drawInsert(INSERT_ET* i) const
@@ -39,11 +39,11 @@ void SOLID::drawInsert(INSERT_ET* i) const
     for (int r = 0; r < i->rowCount; ++r) {
         for (int c = 0; c < i->colCount; ++c) {
             QPointF tr(r * i->rowSpacing, r * i->colSpacing);
-            auto item = scene->addPolygon(poly, QPen(QColor(0, 255, 255, 100), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), QColor(0, 255, 255, 100));
+            auto item = scene->addPolygon(poly, QPen(i->color(), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), i->color());
             item->setPos(i->insPt + tr);
             item->setScale(i->scaleX /*, i->scaleY*/);
             item->setRotation(i->rotationAngle);
-            item->setZValue(1);
+            i->attachToLayer(item);
         }
     }
 }
@@ -100,6 +100,8 @@ void SOLID::parse(CodeData& code)
             break;
         case ExtrDirZ:
             break;
+        default:
+            parseEntity(code);
         }
         code = sp->nextCode();
     } while (code.code != 0);

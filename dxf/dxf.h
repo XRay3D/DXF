@@ -1,10 +1,10 @@
 #pragma once
 
 // https://help.autodesk.com/view/OARX/2020/RUS/?guid=GUID-235B22E0-A567-4CF6-92D3-38A2306D73F3
-
+#include "block.h"
 #include "codedata.h"
-#include "dxfblock.h"
-#include "dxfheader.h"
+#include "dxfvalues.h"
+#include "header.h"
 #include <QFile>
 #include <QObject>
 #include <QTextStream>
@@ -12,6 +12,7 @@
 #include <algorithm>
 
 struct SectionParser;
+struct LAYER;
 
 class DxfFile : public QObject {
     Q_OBJECT
@@ -19,6 +20,9 @@ public:
     explicit DxfFile(QObject* parent = nullptr);
     ~DxfFile();
     void read(const QString& fileName);
+    static LAYER* layer(const QString& name) { return self->layers.value(name, nullptr); }
+
+    QMap<QString, LAYER*> layers;
 
 private:
     int ctr = 0;
@@ -26,6 +30,6 @@ private:
     QFile file;
     QTextStream in;
     QVector<SectionParser*> sections;
-    QMap<QString, DxfBlock*> blocks;
-    DxfHeader header;
+    QMap<QString, Block*> blocks;
+    Header header;
 };

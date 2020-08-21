@@ -12,10 +12,10 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 INCLUDEPATH += $$PWD
 
 HEADERS += \
+    $$PWD/block.h \
     $$PWD/codedata.h \
     $$PWD/dxf.h \
-    $$PWD/dxfblock.h \
-    $$PWD/dxfheader.h \
+    $$PWD/dxfvalues.h \
     $$PWD/entities/arc.h \
     $$PWD/entities/attdef.h \
     $$PWD/entities/attrib.h \
@@ -58,20 +58,32 @@ HEADERS += \
     $$PWD/entities/viewport.h \
     $$PWD/entities/wipeout.h \
     $$PWD/entities/xline.h \
+    $$PWD/header.h \
     $$PWD/section/blocks.h \
     $$PWD/section/classes.h \
     $$PWD/section/entities.h \
-    $$PWD/section/header.h \
+    $$PWD/section/headerparser.h \
     $$PWD/section/objects.h \
     $$PWD/section/sectionparser.h \
     $$PWD/section/tables.h \
-    $$PWD/section/thumbnailimage.h
+    $$PWD/section/thumbnailimage.h \
+    $$PWD/tables/appid.h \
+    $$PWD/tables/block_record.h \
+    $$PWD/tables/dimstyle.h \
+    $$PWD/tables/layer.h \
+    $$PWD/tables/layermodel.h \
+    $$PWD/tables/ltype.h \
+    $$PWD/tables/style.h \
+    $$PWD/tables/tableitem.h \
+    $$PWD/tables/ucs.h \
+    $$PWD/tables/view.h \
+    $$PWD/tables/vport.h
 
 SOURCES += \
+    $$PWD/block.cpp \
     $$PWD/codedata.cpp \
     $$PWD/dxf.cpp \
-    $$PWD/dxfblock.cpp \
-    $$PWD/dxfheader.cpp \
+    $$PWD/dxfvalues.cpp \
     $$PWD/entities/arc.cpp \
     $$PWD/entities/attdef.cpp \
     $$PWD/entities/attrib.cpp \
@@ -114,11 +126,23 @@ SOURCES += \
     $$PWD/entities/viewport.cpp \
     $$PWD/entities/wipeout.cpp \
     $$PWD/entities/xline.cpp \
+    $$PWD/header.cpp \
     $$PWD/section/blocks.cpp \
     $$PWD/section/classes.cpp \
     $$PWD/section/entities.cpp \
-    $$PWD/section/header.cpp \
+    $$PWD/section/headerparser.cpp \
     $$PWD/section/objects.cpp \
     $$PWD/section/sectionparser.cpp \
     $$PWD/section/tables.cpp \
-    $$PWD/section/thumbnailimage.cpp
+    $$PWD/section/thumbnailimage.cpp \
+    $$PWD/tables/appid.cpp \
+    $$PWD/tables/block_record.cpp \
+    $$PWD/tables/dimstyle.cpp \
+    $$PWD/tables/layer.cpp \
+    $$PWD/tables/layermodel.cpp \
+    $$PWD/tables/ltype.cpp \
+    $$PWD/tables/style.cpp \
+    $$PWD/tables/tableitem.cpp \
+    $$PWD/tables/ucs.cpp \
+    $$PWD/tables/view.cpp \
+    $$PWD/tables/vport.cpp

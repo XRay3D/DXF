@@ -7,14 +7,14 @@
 
 extern QGraphicsScene* scene;
 
-SectionENTITIES::SectionENTITIES(QMap<QString, DxfBlock*>& blocks, QVector<CodeData>&& data)
+SectionENTITIES::SectionENTITIES(QMap<QString, Block*>& blocks, QVector<CodeData>&& data)
     : SectionParser(std::move(data))
     , sp(this)
     , blocks(blocks)
 {
 }
 
-SectionENTITIES::SectionENTITIES(QMap<QString, DxfBlock*>& blocks, CodeData& code, SectionParser* sp)
+SectionENTITIES::SectionENTITIES(QMap<QString, Block*>& blocks, CodeData& code, SectionParser* sp)
     : SectionParser({ {}, {} })
     , sp(sp)
     , blocks(blocks)
@@ -27,7 +27,6 @@ SectionENTITIES::SectionENTITIES(QMap<QString, DxfBlock*>& blocks, CodeData& cod
 
 void SectionENTITIES::parse()
 {
-    qDebug(Q_FUNC_INFO);
     code = nextCode();
     code = nextCode();
     while (code.rawVal != "ENDSEC") {
@@ -214,69 +213,3 @@ void SectionENTITIES::iParse(CodeData& code)
     qDebug() << key << code;
     exit(-1000);
 }
-
-//    for (auto [key, val] : entities) {
-//        qDebug() << key << val.size();
-//    }
-//    {
-//        for (auto& val : entities[Entity::INSERT]) {
-//            // qDebug() << val << "\r\r";
-//            //            QMap<int, double> values;
-//            //            for (auto& data : val) {
-//            //                if (data.type == CodeData::Double)
-//            //                    values[data.code] = std::get<double>(data._val);
-//            //                else if (data.type == CodeData::Integer)
-//            //                    values[data.code] = std::get<qint64>(data._val);
-//            //            }
-//            //            scene->addLine({ { values[10], values[20] }, { values[11], values[21] } }, QPen(QColor(0, 0, 0, 100), 0.0));
-//        }
-//    }
-//    {
-//        for (auto& val : entities[Entity::LINE]) {
-//            QMap<int, double> values;
-//            for (auto& data : val) {
-//                if (data.type == CodeData::Double)
-//                    values[data.code] = std::get<double>(data._val);
-//                else if (data.type == CodeData::Integer)
-//                    values[data.code] = std::get<qint64>(data._val);
-//            }
-//            scene->addLine({ { values[10], values[20] }, { values[11], values[21] } }, QPen(QColor(0, 0, 0, 100), 0.0));
-//        }
-//    }
-//    {
-//        for (auto& val : entities[Entity::LWPOLYLINE]) {
-//            QPolygonF poly;
-//            int counter = 0;
-//            for (auto& data : val) {
-//                if (data.code == 90) {
-//                    poly.resize(std::get<qint64>(data._val));
-//                } else if (data.code == 10) {
-//                    poly[counter].rx() = std::get<double>(data._val);
-//                } else if (data.code == 20) {
-//                    poly[counter].ry() = std::get<double>(data._val);
-//                    ++counter;
-//                }
-//            }
-//            scene->addPolygon(poly, QPen(QColor(0, 255, 255, 100), 0.0), Qt::NoBrush);
-//        }
-//    }
-//    {
-//        for (auto& val : entities[Entity::SOLID]) {
-//            QPolygonF poly;
-//            QPointF pt;
-//            for (auto& data : val) {
-//                if (data.code == 10) {
-//                    pt.rx() = std::get<double>(data._val);
-//                } else if (data.code == 20) {
-//                    pt.ry() = std::get<double>(data._val);
-//                    poly.append(pt);
-//                } else if (data.code == 11) {
-//                    pt.rx() = std::get<double>(data._val);
-//                } else if (data.code == 21) {
-//                    pt.ry() = std::get<double>(data._val);
-//                    poly.append(pt);
-//                }
-//            }
-//            scene->addPolygon(poly, QPen(Qt::green, 0.0), Qt::NoBrush);
-//        }
-//    }

@@ -18,7 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 include(dxf/dxf.pri)
-include(src/dxflib.pri)
+#include(src/dxflib.pri)
 
 #include(libdxfrw/src/libdxfrw.pri)
 
@@ -26,12 +26,13 @@ SOURCES += \
     graphicsview.cpp \
     main.cpp \
     mainwindow.cpp \
-    examples/readwrite/test_creationclass.cpp \
-    examples/readwrite/test_creationclass.h \
+#    examples/readwrite/test_creationclass.cpp \
 
 HEADERS += \
     graphicsview.h \
     mainwindow.h \
+#    examples/readwrite/test_creationclass.h \
+
 
 FORMS += \
     mainwindow.ui

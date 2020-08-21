@@ -1,19 +1,19 @@
-#include "dxfblock.h"
+#include "block.h"
 #include "dxf.h"
 
 #include <section/entities.h>
 
-DxfBlock::DxfBlock(QMap<QString, DxfBlock*>& blocks, SectionParser* sp)
+Block::Block(QMap<QString, Block*>& blocks, SectionParser* sp)
     : sp(sp)
     , blocks(blocks)
 {
 }
 
-DxfBlock::~DxfBlock()
+Block::~Block()
 { /*qDeleteAll(entities);*/
 }
 
-void DxfBlock::parse(CodeData& code)
+void Block::parse(CodeData& code)
 {
     parseHeader(code);
     parseData(code);
@@ -23,7 +23,7 @@ void DxfBlock::parse(CodeData& code)
     code = sp->prevCode();
 }
 
-void DxfBlock::parseHeader(CodeData& code)
+void Block::parseHeader(CodeData& code)
 {
     do { // Block header
         bData.append(code);
@@ -72,14 +72,13 @@ void DxfBlock::parseHeader(CodeData& code)
     } while (code.code != 0);
 }
 
-void DxfBlock::parseData(CodeData& code)
+void Block::parseData(CodeData& code)
 {
     do {
         if (code.rawVal == "ENDBLK")
             break;
         SectionENTITIES se(blocks, code, sp);
-        entities = se.entities;
-        se.entities.clear();
+        entities = std::move(se.entities);
         if (code.rawVal == "ENDBLK")
             break;
         code = sp->nextCode();

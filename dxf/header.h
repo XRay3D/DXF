@@ -3,7 +3,7 @@
 #include <QMap>
 #include <QVariant>
 
-struct DxfHeader {
-    DxfHeader();
+struct Header {
+    Header();
     QMap<QString, QMap<int, QVariant>> data;
 };

@@ -62,7 +62,7 @@ void Test_CreationClass::addPoint(const DL_PointData& data)
 void Test_CreationClass::addLine(const DL_LineData& data)
 {
     scene->addLine({ { data.x1, data.y1 }, { data.x2, data.y2 } },
-        QPen(QColor(0, 0, 0, 100), 0.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        QPen(QColor(0, 0, 0, 50), 0.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
     qDebug("LINE     (%6.3f, %6.3f, %6.3f) (%6.3f, %6.3f, %6.3f)\n",
         data.x1, data.y1, data.z1, data.x2, data.y2, data.z2);
@@ -87,7 +87,7 @@ void Test_CreationClass::addCircle(const DL_CircleData& data)
 {
     QPointF с(data.cx, data.cy);
     QPointF r(data.radius, data.radius);
-    scene->addEllipse(QRectF(с - r, с + r), QPen(QColor(0, 0, 0, 100), 0.0 /*thickness*/ /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush);
+    scene->addEllipse(QRectF(с - r, с + r), QPen(QColor(0, 0, 0, 50), 0.0 /*thickness*/ /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush);
 
     qDebug("CIRCLE   (%6.3f, %6.3f, %6.3f) %6.3f\n",
         data.cx, data.cy, data.cz,
@@ -101,7 +101,7 @@ void Test_CreationClass::addCircle(const DL_CircleData& data)
 void Test_CreationClass::addPolyline(const DL_PolylineData& data)
 {
     if (!polygon.isEmpty())
-        scene->addPolygon(polygon, QPen(QColor(0, 0, 0, 100), 0.0 /*width*/, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush);
+        scene->addPolygon(polygon, QPen(QColor(0, 0, 0, 50), 0.0 /*width*/, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush);
     polygon.clear();
     qDebug("POLYLINE \n");
     qDebug("flags: %d\n", (int)data.flags);

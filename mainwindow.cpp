@@ -2,8 +2,9 @@
 #include "ui_mainwindow.h"
 #include <QApplication>
 #include <QSettings>
-#include <dl_dxf.h>
-#include <examples/readwrite/test_creationclass.h>
+#include <tables/layermodel.h>
+//#include <dl_dxf.h>
+//#include <examples/readwrite/test_creationclass.h>
 //#include <libdxfrw/src/libdxfrw.h>
 //#include <libdxfrw/src/mydrwinterface.h>
 
@@ -41,21 +42,25 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
     scene->clear();
-//    const QString str(ui->lineEdit->text());
-//    dxf.read(str);
-    testReading(ui->lineEdit->text().toLocal8Bit().data());
+    const QString str(ui->lineEdit->text());
+    dxf.read(str);
+
+    ui->tableView->setModel(new LayerModel(dxf.layers));
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    //    testReading(ui->lineEdit->text().toLocal8Bit().data());
 }
 
 void MainWindow::testReading(char* file)
 {
     // Load DXF file into memory:
-    qWarning() << "Reading file " << file << "...\n";
-    Test_CreationClass* creationClass = new Test_CreationClass();
-    DL_Dxf* dxf = new DL_Dxf();
-    if (!dxf->in(file, creationClass)) { // if file open failed
-        qWarning() << file << " could not be opened.\n";
-        return;
-    }
-    delete dxf;
-    delete creationClass;
+    //    qWarning() << "Reading file " << file << "...\n";
+    //    Test_CreationClass* creationClass = new Test_CreationClass();
+    //    DL_Dxf* dxf = new DL_Dxf();
+    //    if (!dxf->in(file, creationClass)) { // if file open failed
+    //        qWarning() << file << " could not be opened.\n";
+    //        return;
+    //    }
+    //    delete dxf;
+    //    delete creationClass;
 }

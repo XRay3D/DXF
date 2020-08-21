@@ -6,10 +6,10 @@
 struct Entity;
 struct SectionParser;
 
-struct DxfBlock {
+struct Block {
     SectionParser* sp;
-    DxfBlock(QMap<QString, DxfBlock*>& blocks ,SectionParser* sp = nullptr);
-    ~DxfBlock();
+    Block(QMap<QString, Block*>& blocks ,SectionParser* sp = nullptr);
+    ~Block();
 
     void parse(CodeData& code);
     void parseHeader(CodeData& code);
@@ -55,5 +55,5 @@ struct DxfBlock {
 
     QVector<CodeData> bData;
     QVector<Entity*> entities;
-    QMap<QString, DxfBlock*>& blocks;
+    QMap<QString, Block*>& blocks;
 };

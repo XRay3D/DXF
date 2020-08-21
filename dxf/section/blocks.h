@@ -1,15 +1,15 @@
 #pragma once
 
 #include "sectionparser.h"
-#include <dxfblock.h>
+#include <block.h>
 
 ///////////////////////////////////////
 /// \brief The SectionBLOCKS struct
 ///
 struct SectionBLOCKS final : SectionParser {
-    SectionBLOCKS(QMap<QString, DxfBlock*>& blocks, QVector<CodeData>&& data);
+    SectionBLOCKS(QMap<QString, Block*>& blocks, QVector<CodeData>&& data);
     virtual ~SectionBLOCKS() = default;
     // Section interface
     void parse() override;
-    QMap<QString, DxfBlock*>& blocks;
+    QMap<QString, Block*>& blocks;
 };

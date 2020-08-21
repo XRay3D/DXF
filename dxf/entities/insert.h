@@ -1,11 +1,11 @@
 #pragma once
 
 #include "entity.h"
-#include <dxfblock.h>
+#include <block.h>
 #include <set>
 
 struct INSERT_ET final : Entity {
-    INSERT_ET(QMap<QString, DxfBlock*>& blocks, SectionParser* sp);
+    INSERT_ET(QMap<QString, Block*>& blocks, SectionParser* sp);
 
     // Entity interface
 public:
@@ -36,10 +36,7 @@ public:
         ExtrDirZ = 230, // DXF: Z value of extrusion direction (optional)
     };
 
-    const std::set<VarType> checker;
-    std::map<VarType, var&> vars;
-    //QMap<VarType, var&> vars;
-    QMap<QString, DxfBlock*>& blocks;
+    QMap<QString, Block*>& blocks;
     QString blockName; // Block name
     QPointF insPt; // Точка вставки (в ОСК). Файл DXF: значение X; приложение: 3D-точка
     double scaleX = 1; // Масштабный коэффициент по оси X(необязательно; значение по умолчанию = 1)

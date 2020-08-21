@@ -10,10 +10,12 @@ extern QGraphicsScene* scene;
 class TextItem final : public QGraphicsItem {
     const TEXT* text;
     QPainterPath path;
+    QColor color;
 
 public:
-    TextItem(const TEXT* text)
+    TextItem(const TEXT* text, const QColor& color)
         : text(text)
+        , color(color)
     {
         QFont f("Input Mono");
         f.setPointSizeF(text->textHeight);
@@ -31,9 +33,9 @@ public:
     }
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/) override
     {
-        painter->setPen({ QColor(0, 0, 0, 100), 0.0 });
+        painter->setPen({ color, 0.0 });
         //painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(0, 0, 0, 100));
+        painter->setBrush(color);
         //painter->drawPath(path);
 
         {
@@ -56,13 +58,13 @@ TEXT::TEXT(SectionParser* sp)
 
 void TEXT::draw() const
 {
-    //    qDebug(Q_FUNC_INFO);
-    scene->addItem(new TextItem(this));
+    auto item = new TextItem(this, color());
+    scene->addItem(item);
+    attachToLayer(item);
 }
 
 void TEXT::drawInsert(INSERT_ET* i) const
 {
-    qDebug(Q_FUNC_INFO);
     Q_UNUSED(i)
 }
 
@@ -120,6 +122,8 @@ void TEXT::parse(CodeData& code)
             break;
         case ExtrDirZ:
             break;
+        default:
+            parseEntity(code);
         }
         code = sp->nextCode();
     } while (code.code != 0);

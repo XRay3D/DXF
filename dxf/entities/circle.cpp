@@ -2,6 +2,8 @@
 #include "insert.h"
 #include <QGraphicsEllipseItem>
 #include <QGraphicsScene>
+#include <section/blocks.h>
+#include <section/entities.h>
 
 extern QGraphicsScene* scene;
 
@@ -13,7 +15,7 @@ CIRCLE::CIRCLE(SectionParser* sp)
 void CIRCLE::draw() const
 {
     QPointF r(radius, radius);
-    scene->addEllipse(QRectF(centerPoint - r, centerPoint + r), QPen(QColor(0, 0, 0, 100), thickness /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush);
+    scene->addEllipse(QRectF(centerPoint - r, centerPoint + r), QPen(QColor(0, 0, 0, 50), thickness /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush);
 }
 void CIRCLE::drawInsert(INSERT_ET* i) const
 {

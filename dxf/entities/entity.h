@@ -5,7 +5,7 @@
 #include <dxf/section/sectionparser.h>
 
 struct INSERT_ET;
-
+class QGraphicsItem;
 #ifndef ENTITY_H
 #define ENTITY_H
 
@@ -19,6 +19,9 @@ struct Entity {
     virtual void drawInsert(INSERT_ET* i) const = 0;
     virtual void parse(CodeData& code) = 0;
     static int toType(const QString& key);
+    void parseEntity(CodeData& code);
+    QColor color() const;
+    void attachToLayer(QGraphicsItem* item) const;
 
     enum Type {
         ACAD_PROXY_ENTITY,
@@ -70,13 +73,9 @@ struct Entity {
 
     virtual Type type() const = 0;
 
+    QString layerName;
+
     enum VarType {
-
-        //    Групповые коды, которые применяются ко всем графическим объектам
-        //    Групповой код
-        //    Описание
-        //    Если отсутствует, принимается значение по умолчанию...
-
         EntityName = -1, //    Приложение: имя объекта (изменяется при каждом открытии чертежа)
         //    не пропускается
         EntityType = 0, //    Тип объекта

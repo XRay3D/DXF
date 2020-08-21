@@ -1,9 +1,9 @@
-#include "header.h"
+#include "headerparser.h"
 
 #include <QTreeWidget>
 #include <dxf/dxf.h>
 
-SectionHEADER::SectionHEADER(DxfHeader& header, QVector<CodeData>&& data)
+SectionHEADER::SectionHEADER(Header& header, QVector<CodeData>&& data)
     : SectionParser(std::move(data))
     , header(header)
 {

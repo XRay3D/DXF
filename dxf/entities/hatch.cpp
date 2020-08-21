@@ -13,7 +13,7 @@ HATCH::HATCH(SectionParser* sp)
 
 void HATCH::draw() const
 {
-    qDebug(Q_FUNC_INFO);
+    QPainterPath path;
     QPolygonF poly;
     QPointF pt;
     double width = 0;
@@ -32,18 +32,27 @@ void HATCH::draw() const
                 poly.append(pt);
         } else if (d.code == 40) {
             width = std::get<double>(d._val);
+        } else if (d.code == 92) {
+            path.addPolygon(poly);
+            poly.clear();
         }
     }
-    scene->addPolygon(poly, QPen(QColor(0, 0, 0, 100), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), QColor(255, 0, 0, 100));
+    path.addPolygon(poly);
+    attachToLayer(scene->addPath(path, QPen(color(), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), color()));
 }
 
-void HATCH::drawInsert(INSERT_ET* i) const { Q_UNUSED(i) }
+void HATCH::drawInsert(INSERT_ET* i) const
+{
+    return;
+    Q_UNUSED(i)
+}
 
 void HATCH::parse(CodeData& code)
 {
     do {
         data << code;
         code = sp->nextCode();
+        parseEntity(code);
     } while (code.code != 0);
     code = sp->prevCode();
 }

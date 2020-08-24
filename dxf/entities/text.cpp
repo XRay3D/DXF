@@ -56,16 +56,16 @@ TEXT::TEXT(SectionParser* sp)
 {
 }
 
-void TEXT::draw() const
+void TEXT::draw(const INSERT_ET* const i) const
 {
-    auto item = new TextItem(this, color());
-    scene->addItem(item);
-    attachToLayer(item);
-}
 
-void TEXT::drawInsert(INSERT_ET* i) const
-{
-    Q_UNUSED(i)
+    if (i) {
+        Q_UNUSED(i)
+    } else {
+        auto item = new TextItem(this, color());
+        scene->addItem(item);
+        attachToLayer(item);
+    }
 }
 
 void TEXT::parse(CodeData& code)

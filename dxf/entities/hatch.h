@@ -5,8 +5,8 @@ struct HATCH final : Entity {
 
     // Entity interface
 public:
-    void draw() const override;
-    void drawInsert(INSERT_ET* i) const override;
+    void draw(const INSERT_ET* const i = nullptr) const override;
+
     void parse(CodeData& code) override;
     Type type() const override { return Type::HATCH; };
 

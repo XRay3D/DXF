@@ -5,8 +5,8 @@ struct SOLID final : Entity {
 
     // Entity interface
 public:
-    void draw() const override;
-    void drawInsert(INSERT_ET* i) const override;
+    void draw(const INSERT_ET* const i = nullptr) const override;
+
     void parse(CodeData& code) override;
     Type type() const override { return Type::SOLID; }
 
@@ -35,6 +35,7 @@ public:
         ExtrDirY = 220, //        Файл DXF: значения Y и Z для направления выдавливания (необязательно)
         ExtrDirZ = 230
     };
+
     enum Corners {
         NoCorner = 0,
         FirstCorner = 1,

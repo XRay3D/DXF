@@ -12,22 +12,23 @@ CIRCLE::CIRCLE(SectionParser* sp)
 {
 }
 
-void CIRCLE::draw() const
+void CIRCLE::draw(const INSERT_ET* const i) const
 {
-    QPointF r(radius, radius);
-    scene->addEllipse(QRectF(centerPoint - r, centerPoint + r), QPen(QColor(0, 0, 0, 50), thickness /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush);
-}
-void CIRCLE::drawInsert(INSERT_ET* i) const
-{
-    for (int r = 0; r < i->rowCount; ++r) {
-        for (int c = 0; c < i->colCount; ++c) {
-            QPointF tr(r * i->rowSpacing, r * i->colSpacing);
-            QPointF r(radius, radius);
-            auto item = scene->addEllipse(QRectF(centerPoint - r, centerPoint + r), QPen(QColor(0, 255, 255, 100), thickness /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush);
-            item->setPos(i->insPt + tr);
-            item->setScale(i->scaleX /*, i->scaleY*/);
-            item->setRotation(i->rotationAngle);
+    if (i) {
+        for (int r = 0; r < i->rowCount; ++r) {
+            for (int c = 0; c < i->colCount; ++c) {
+                QPointF tr(r * i->rowSpacing, r * i->colSpacing);
+                QPointF r(radius, radius);
+                auto item = scene->addEllipse(QRectF(centerPoint - r, centerPoint + r), QPen(i->color(), thickness /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush);
+                item->setToolTip(layerName);
+                i->transform(item, tr);
+                i->attachToLayer(item);
+            }
         }
+    } else {
+        QPointF r(radius, radius);
+        attachToLayer(scene->addEllipse(QRectF(centerPoint - r, centerPoint + r),
+            QPen(i->color(), thickness /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush));
     }
 }
 
@@ -58,6 +59,8 @@ void CIRCLE::parse(CodeData& code)
             break;
         case ExtrDirZ:
             break;
+        default:
+            parseEntity(code);
         }
         code = sp->nextCode();
     } while (code.code != 0);

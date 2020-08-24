@@ -13,6 +13,11 @@ int Entity::toType(const QString& key)
     return staticMetaObject.enumerator(0).keyToValue(key.toLocal8Bit().toUpper().data());
 }
 
+QString Entity::toType(int key)
+{
+    return staticMetaObject.enumerator(0).valueToKey(key);
+}
+
 void Entity::parseEntity(CodeData& code)
 {
     switch (code.code) {
@@ -26,16 +31,19 @@ void Entity::parseEntity(CodeData& code)
 
 QColor Entity::color() const
 {
-    if (DxfFile::layer(layerName)) {
-        QColor c(dxfColors[DxfFile::layer(layerName)->colorNumber]);
-        c.setAlpha(255);
+    if (auto layer = DxfFile::layer(layerName); layer) {
+        QColor c(dxfColors[layer->colorNumber]);
+        //c.setAlpha(125);
         return c;
     }
-    return QColor(0, 0, 0, 255);
+    qDebug(Q_FUNC_INFO);
+    return QColor(255, 0, 255, 100);
 }
 
 void Entity::attachToLayer(QGraphicsItem* item) const
 {
-    if (DxfFile::layer(layerName))
+    if (DxfFile::layer(layerName)) {
         DxfFile::layer(layerName)->gig->addToGroup(item);
+        item->setToolTip(toType(type()));
+    }
 }

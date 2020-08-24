@@ -11,7 +11,7 @@ SOLID::SOLID(SectionParser* sp)
 {
 }
 
-void SOLID::draw() const
+void SOLID::draw(const INSERT_ET* const i) const
 {
     QPolygonF poly;
     if (corners == 15) { //all
@@ -22,29 +22,18 @@ void SOLID::draw() const
         poly << thirdCorner;
         //        poly << firstCorner;
     }
-    attachToLayer(scene->addPolygon(poly, QPen(color(), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), color()));
-}
-
-void SOLID::drawInsert(INSERT_ET* i) const
-{
-    QPolygonF poly;
-    if (corners == 15) { //all
-        poly.reserve(5);
-        poly << firstCorner;
-        poly << secondCorner;
-        poly << fourthCorner;
-        poly << thirdCorner;
-        //        poly << firstCorner;
-    }
-    for (int r = 0; r < i->rowCount; ++r) {
-        for (int c = 0; c < i->colCount; ++c) {
-            QPointF tr(r * i->rowSpacing, r * i->colSpacing);
-            auto item = scene->addPolygon(poly, QPen(i->color(), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), i->color());
-            item->setPos(i->insPt + tr);
-            item->setScale(i->scaleX /*, i->scaleY*/);
-            item->setRotation(i->rotationAngle);
-            i->attachToLayer(item);
+    if (i) {
+        for (int r = 0; r < i->rowCount; ++r) {
+            for (int c = 0; c < i->colCount; ++c) {
+                QPointF tr(r * i->rowSpacing, r * i->colSpacing);
+                auto item = scene->addPolygon(poly, QPen(i->color(), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), i->color());
+                item->setToolTip(layerName);
+                i->transform(item, tr);
+                i->attachToLayer(item);
+            }
         }
+    } else {
+        attachToLayer(scene->addPolygon(poly, QPen(color(), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), color()));
     }
 }
 

@@ -9,9 +9,21 @@ LINE::LINE(SectionParser* sp)
 {
 }
 
-void LINE::draw() const
+void LINE::draw(const INSERT_ET* const i) const
 {
-    attachToLayer(scene->addLine({ startPoint, endPoint }, QPen(color(), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)));
+    if (i) {
+        for (int r = 0; r < i->rowCount; ++r) {
+            for (int c = 0; c < i->colCount; ++c) {
+                QPointF tr(r * i->rowSpacing, r * i->colSpacing);
+                auto item = scene->addLine({ startPoint, endPoint }, QPen(i->color(), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+                item->setToolTip(layerName);
+                i->transform(item, tr);
+                i->attachToLayer(item);
+            }
+        }
+    } else {
+        attachToLayer(scene->addLine({ startPoint, endPoint }, QPen(color(), thickness, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)));
+    }
 }
 
 void LINE::parse(CodeData& code)

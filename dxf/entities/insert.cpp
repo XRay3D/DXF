@@ -1,4 +1,5 @@
 #include "insert.h"
+#include <QGraphicsItem>
 #include <QGraphicsScene>
 //#include <dxf/dxf.h>
 
@@ -10,32 +11,47 @@ INSERT_ET::INSERT_ET(QMap<QString, Block*>& blocks, SectionParser* sp)
 {
 }
 
-void INSERT_ET::draw() const
+void INSERT_ET::draw(const INSERT_ET* const i) const
 {
-    if (blocks.contains(blockName)) {
-        for (auto e : blocks[blockName]->entities) {
-            e->drawInsert(const_cast<INSERT_ET*>(this));
-        }
-        if (blocks[blockName]->entities.isEmpty())
-            scene->addEllipse({ insPt - QPointF(0.5, 0.5), insPt + QPointF(0.5, 0.5) }, QPen(QColor(255, 0, 0, 100), 0.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), QColor(255, 0, 0));
-    }
-}
+    if (!blocks.contains(blockName))
+        return;
 
-void INSERT_ET::drawInsert(INSERT_ET* i) const
-{
-    if (blocks.contains(blockName)) {
-        for (auto e : blocks[blockName]->entities) {
-            e->drawInsert(const_cast<INSERT_ET*>(i));
+    if (blocks[blockName]->entities.isEmpty())
+        return;
+
+    for (auto e : blocks[blockName]->entities) {
+        if (i) {
+            qDebug() << "1" << e->type();
+            INSERT_ET t(*this);
+            if (layerName == "0")
+                t.layerName = i->layerName;
+            if (insPt.isNull())
+                t.insPt = i->insPt;
+
+            if (qFuzzyIsNull(rotationAngle))
+                t.rotationAngle = i->rotationAngle;
+
+            if (e->type() != INSERT) {
+                if (t.layerName == "0")
+                    t.layerName = e->layerName;
+            }
+            e->draw(&t);
+        } else if (e->type() != INSERT) {
+            qDebug() << "2" << e->type();
+            INSERT_ET t(*this);
+            if (t.layerName == "0")
+                t.layerName = e->layerName;
+            e->draw(&t);
+        } else {
+            e->draw(this);
         }
-        if (blocks[blockName]->entities.isEmpty())
-            scene->addEllipse({ insPt - QPointF(0.5, 0.5), insPt + QPointF(0.5, 0.5) }, QPen(QColor(255, 0, 0, 100), 0.0, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), QColor(255, 0, 0));
     }
 }
 
 void INSERT_ET::parse(CodeData& code)
 {
+    data << code;
     do {
-        data << code;
         switch (code.code) {
         case SubclassMrker:
             break;
@@ -84,6 +100,13 @@ void INSERT_ET::parse(CodeData& code)
         default:
             parseEntity(code);
         }
-        code = sp->nextCode();
+        data << (code = sp->nextCode());
     } while (code.code != 0);
+}
+
+void INSERT_ET::transform(QGraphicsItem* item, QPointF tr) const
+{
+    item->setRotation(rotationAngle);
+    item->setScale(scaleX /*, i->scaleY*/);
+    item->setPos(insPt + tr);
 }

@@ -21,6 +21,17 @@ DxfFile::~DxfFile() { qDeleteAll(sections); }
 
 bool DxfFile::read(const QString& fileName)
 {
+    //    Entity::CIRCLE;
+    //    Entity::INSERT;
+    //    Entity::LINE;
+    //    Entity::POLYLINE;
+    //    Entity::SOLID;
+
+    //    1	Entity::INSERT
+    //    1	Entity::SOLID
+    //    1	Entity::POLYLINE
+    //    1	Entity::CIRCLE
+    //    1	Entity::LINE
 
     //    Open dxfFile For Input As #1
     file.setFileName(fileName);

@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget* parent)
         QSettings s("dxf.ini", QSettings::IniFormat);
         restoreState(s.value("State").toByteArray());
         restoreGeometry(s.value("Geometry").toByteArray());
+        ui->splitter->restoreState(s.value("Splitter").toByteArray());
         ui->lineEdit->setText(s.value("lineEdit").toString());
     }
 
@@ -34,6 +35,7 @@ MainWindow::~MainWindow()
         QSettings s("dxf.ini", QSettings::IniFormat);
         s.setValue("State", saveState());
         s.setValue("Geometry", saveGeometry());
+        s.setValue("Splitter", ui->splitter->saveState());
         s.setValue("lineEdit", ui->lineEdit->text());
     }
     delete ui;

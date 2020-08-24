@@ -18,7 +18,7 @@ struct SectionENTITIES final : SectionParser {
     void parse() override;
 
     QVector<Entity*> entities;
-    std::map<Entity::Type, QVector<Entity*>> entitiesMap;
+    QMap<Entity::Type, QVector<Entity*>> entitiesMap;
 
 private:
     void iParse(CodeData& code);

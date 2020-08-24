@@ -11,7 +11,7 @@ HATCH::HATCH(SectionParser* sp)
 {
 }
 
-void HATCH::draw() const
+void HATCH::draw(const INSERT_ET* const i) const
 {
     QPainterPath path;
     QPolygonF poly;
@@ -38,13 +38,12 @@ void HATCH::draw() const
         }
     }
     path.addPolygon(poly);
-    attachToLayer(scene->addPath(path, QPen(color(), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), color()));
-}
 
-void HATCH::drawInsert(INSERT_ET* i) const
-{
-    return;
-    Q_UNUSED(i)
+    if (i) {
+        Q_UNUSED(i)
+    } else {
+        attachToLayer(scene->addPath(path, QPen(color(), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), color()));
+    }
 }
 
 void HATCH::parse(CodeData& code)

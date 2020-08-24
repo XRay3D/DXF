@@ -68,7 +68,6 @@ public:
             } else {
                 aAngle -= 180;
                 bAngle -= 180;
-                qDebug() << aAngle << bAngle;
                 path.moveTo(a);
                 if (aAngle > bAngle) {
                     bAngle = (bAngle - aAngle);
@@ -101,44 +100,40 @@ LWPOLYLINE::LWPOLYLINE(SectionParser* sp)
 {
 }
 
-void LWPOLYLINE::draw() const
+void LWPOLYLINE::draw(const INSERT_ET* const i) const
 {
-
-    if (bulge != 0.0) {
-        //        return;
-        auto item = new ArcItem(this, color());
-        scene->addItem(item);
-        attachToLayer(item);
-    } else {
-        attachToLayer(scene->addPolygon(poly, QPen(color(), constantWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush));
-    }
-}
-
-void LWPOLYLINE::drawInsert(INSERT_ET* i) const
-{
-
-    if (bulge != 0.0) {
-        for (int r = 0; r < i->rowCount; ++r) {
-            for (int c = 0; c < i->colCount; ++c) {
-                QPointF tr(r * i->rowSpacing, r * i->colSpacing);
-                auto item = new ArcItem(this, i->color());
-                item->setPos(i->insPt + tr);
-                item->setScale(i->scaleX /*, i->scaleY*/);
-                item->setRotation(i->rotationAngle);
-                scene->addItem(item);
-                i->attachToLayer(item);
+    if (i) {
+        if (bulge != 0.0) {
+            for (int r = 0; r < i->rowCount; ++r) {
+                for (int c = 0; c < i->colCount; ++c) {
+                    QPointF tr(r * i->rowSpacing, r * i->colSpacing);
+                    auto item = new ArcItem(this, i->color());
+                    item->setPos(i->insPt + tr);
+                    item->setScale(i->scaleX /*, i->scaleY*/);
+                    item->setRotation(i->rotationAngle);
+                    scene->addItem(item);
+                    i->attachToLayer(item);
+                }
+            }
+        } else {
+            for (int r = 0; r < i->rowCount; ++r) {
+                for (int c = 0; c < i->colCount; ++c) {
+                    QPointF tr(r * i->rowSpacing, r * i->colSpacing);
+                    auto item = scene->addPolygon(poly, QPen(i->color(), constantWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush);
+                    item->setToolTip(layerName);
+                    i->transform(item, tr);
+                    i->attachToLayer(item);
+                }
             }
         }
     } else {
-        for (int r = 0; r < i->rowCount; ++r) {
-            for (int c = 0; c < i->colCount; ++c) {
-                QPointF tr(r * i->rowSpacing, r * i->colSpacing);
-                auto item = scene->addPolygon(poly, QPen(i->color(), constantWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush);
-                item->setPos(i->insPt + tr);
-                item->setScale(i->scaleX /*, i->scaleY*/);
-                item->setRotation(i->rotationAngle);
-                i->attachToLayer(item);
-            }
+        if (bulge != 0.0) {
+            //        return;
+            auto item = new ArcItem(this, color());
+            scene->addItem(item);
+            attachToLayer(item);
+        } else {
+            attachToLayer(scene->addPolygon(poly, QPen(color(), constantWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush));
         }
     }
 }
@@ -195,7 +190,4 @@ void LWPOLYLINE::parse(CodeData& code)
         }
         code = sp->nextCode();
     } while (code.code != 0);
-    if (poly.size() > 2) {
-        qDebug() << poly.size() << (poly.first() == poly.last());
-    }
 }

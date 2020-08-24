@@ -14,11 +14,11 @@ struct Entity {
     QVector<CodeData> data;
     SectionParser* sp = nullptr;
     Entity(SectionParser* sp);
-    virtual ~Entity() { }
-    virtual void draw() const = 0;
-    virtual void drawInsert(INSERT_ET* i) const = 0;
+    virtual ~Entity() {}
+    virtual void draw(const INSERT_ET* const i = nullptr) const = 0;
     virtual void parse(CodeData& code) = 0;
     static int toType(const QString& key);
+    static QString toType(int key);
     void parseEntity(CodeData& code);
     QColor color() const;
     void attachToLayer(QGraphicsItem* item) const;

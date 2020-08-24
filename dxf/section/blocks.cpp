@@ -18,6 +18,7 @@ void SectionBLOCKS::parse()
             if (!block->blockName.isEmpty()) {
                 blocks[block->blockName] = block;
             } else {
+                qDebug() << "blockName ERR!";
                 delete block;
             }
         }

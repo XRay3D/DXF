@@ -11,7 +11,7 @@ struct CodeData {
     friend QDebug operator<<(QDebug debug, const CodeData& c)
     {
         QDebugStateSaver saver(debug);
-        debug.nospace() << "DC(" << c.code << ", " << c.rawVal << ", " << c.ln << ')';
+        debug.nospace() << "DC(" << c.code << ", " << c.rawVal << ')';
         return debug;
     }
 

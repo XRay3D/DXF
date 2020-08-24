@@ -17,6 +17,7 @@ void POLYLINE::draw(const INSERT_ET* const i) const
     QPolygonF poly;
     QPointF pt;
     double width = 0;
+    double width2 = 0;
     for (auto& d : data) {
         if (d.code == 10) {
             pt.rx() = std::get<double>(d._val);
@@ -31,6 +32,8 @@ void POLYLINE::draw(const INSERT_ET* const i) const
             poly.append(pt);
         } else if (d.code == 40) {
             width = std::get<double>(d._val);
+        } else if (d.code == 41) {
+            width2 = std::get<double>(d._val);
         }
     }
 
@@ -42,8 +45,10 @@ void POLYLINE::draw(const INSERT_ET* const i) const
                 item->setToolTip(layerName);
                 i->transform(item, tr);
                 i->attachToLayer(item);
+                qDebug() << item->boundingRect().size().width() << item->boundingRect().size().height() << width << width2;
             }
         }
+        //qDebug() << "POLYLINE" << data;
     } else {
         attachToLayer(scene->addPolygon(poly, QPen(color(), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush));
     }

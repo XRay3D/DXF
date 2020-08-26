@@ -21,7 +21,6 @@ void INSERT_ET::draw(const INSERT_ET* const i) const
 
     for (auto e : blocks[blockName]->entities) {
         if (i) {
-            qDebug() << "1" << e->type();
             INSERT_ET t(*this);
             if (layerName == "0")
                 t.layerName = i->layerName;
@@ -37,7 +36,6 @@ void INSERT_ET::draw(const INSERT_ET* const i) const
             }
             e->draw(&t);
         } else if (e->type() != INSERT) {
-            qDebug() << "2" << e->type();
             INSERT_ET t(*this);
             if (t.layerName == "0")
                 t.layerName = e->layerName;

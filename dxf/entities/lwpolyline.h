@@ -39,8 +39,10 @@ public:
 
     void parse(CodeData& code) override;
     Type type() const override { return Type::LWPOLYLINE; }
-
-    QPolygonF poly;
+    struct Segment : QPointF {
+        double bulge = 0.0;
+    };
+    QVector<Segment> poly;
     int counter = 0;
     int polylineFlag = 0;
     int numberOfVertices = 0;
@@ -49,5 +51,4 @@ public:
     double constantWidth = 0.0;
     int elevation = 0;
     double thickness = 0.0;
-    double bulge = 0.0;
 };

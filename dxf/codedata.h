@@ -5,13 +5,33 @@
 
 using var = std::variant<double, qint64, QString>;
 
-struct CodeData {
+class CodeData {
+    Q_GADGET
+    int m_code = 0;
+    var m_val;
+    QString rawVal;
+    int ln;
+
+public:
     CodeData(int code = 0, const QString& val = {}, int ln = 0);
 
     friend QDebug operator<<(QDebug debug, const CodeData& c)
     {
         QDebugStateSaver saver(debug);
-        debug.nospace() << "DC(" << c.code << ", " << c.rawVal << ')';
+        debug.nospace() << QString("DC(%1, ").arg(c.m_code, 5).toLocal8Bit().data();
+        std::visit([&debug](auto&& arg) {
+            using T = std::decay_t<decltype(arg)>;
+            /*  */ if constexpr (std::is_same_v<T, double>) {
+                debug << "D ";
+            } else if constexpr (std::is_same_v<T, qint64>) {
+                debug << "I ";
+            } else if constexpr (std::is_same_v<T, QString>) {
+                debug << "S ";
+            }
+            debug << arg;
+        },
+            c.m_val);
+        debug.nospace() << ')';
         return debug;
     }
 
@@ -20,16 +40,33 @@ struct CodeData {
         Integer,
         String,
     };
-
-    double getDouble() const;
-    qint64 getInteger() const;
-    QString getString() const;
-
-    int code = 0;
-    Type type = String;
-    var _val;
-    QString rawVal;
-    int ln;
     Q_ENUM(Type)
-    Q_GADGET
+
+    int code() const;
+
+    operator double() const;
+
+    operator qint64() const;
+    operator int() const;
+
+    operator QString() const;
+
+    friend bool operator==(const CodeData& l, const QString& r) { return l.rawVal == r; }
+    friend bool operator!=(const CodeData& l, const QString& r) { return !(l == r); }
+    friend bool operator==(const QString& l, const CodeData& r) { return l == r.rawVal; }
+    friend bool operator!=(const QString& l, const CodeData& r) { return !(l == r); }
+
+    //    template <typename T = int, typename std::enable_if_t<std::is_integral_v<T>>>
+    //    operator T() const
+    //    {
+    //        try {
+    //            return static_cast<T>(std::get<qint64>(m_val));
+    //        } catch (const std::bad_variant_access& ex) {
+    //            qDebug() << ex.what();
+    //            return -std::numeric_limits<T>::max();
+    //        }
+    //    }
+
+    Type type() const;
+    QVariant value() const;
 };

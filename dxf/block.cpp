@@ -19,7 +19,7 @@ void Block::parse(CodeData& code)
     parseData(code);
     do {
         code = sp->nextCode();
-    } while (code.code != 0);
+    } while (code.code() != 0);
     code = sp->prevCode();
 }
 
@@ -27,7 +27,7 @@ void Block::parseHeader(CodeData& code)
 {
     do { // Block header
         bData.append(code);
-        switch (code.code) {
+        switch (code.code()) {
         case EntityType:
             break;
         case Handle:
@@ -41,46 +41,46 @@ void Block::parseHeader(CodeData& code)
         case SubclassMarker:
             break;
         case LayerName:
-            layerName = code.rawVal;
+            layerName = QString(code);
             break;
             //            case SubclassMarker_2:
             //                break;
         case BlockName:
-            blockName = code.rawVal;
+            blockName = QString(code);
             break;
         case BlockTypeFlags:
-            flags = static_cast<BTFlags>(code.getInteger());
+            flags = static_cast<BTFlags>(code.operator long long());
             break;
         case BasePointX:
-            basePoint.rx() = code.getDouble();
+            basePoint.rx() = code;
             break;
         case BasePointY:
-            basePoint.ry() = code.getDouble();
+            basePoint.ry() = code;
             break;
         case BasePointZ:
             break;
         case BlockName_2:
-            blockName = code.rawVal;
+            blockName = QString(code);
             break;
         case XrefPathName:
             break;
         case BlockDescription:
-            blockDescription = code.rawVal;
+            blockDescription = QString(code);
             break;
         }
         code = sp->nextCode();
-    } while (code.code != 0);
+    } while (code.code() != 0);
 }
 
 void Block::parseData(CodeData& code)
 {
     do {
-        if (code.rawVal == "ENDBLK")
+        if (code == "ENDBLK")
             break;
         SectionENTITIES se(blocks, code, sp);
         entities = std::move(se.entities);
-        if (code.rawVal == "ENDBLK")
+        if (code == "ENDBLK")
             break;
         code = sp->nextCode();
-    } while (code.rawVal != "ENDBLK");
+    } while (code != "ENDBLK");
 }

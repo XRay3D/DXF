@@ -19,21 +19,21 @@ void POLYLINE::draw(const INSERT_ET* const i) const
     double width = 0;
     double width2 = 0;
     for (auto& d : data) {
-        if (d.code == 10) {
-            pt.rx() = std::get<double>(d._val);
-        } else if (d.code == 20) {
-            pt.ry() = std::get<double>(d._val);
+        if (d.code() == 10) {
+            pt.rx() = d;
+        } else if (d.code() == 20) {
+            pt.ry() = d;
             poly.append(pt);
-        } else if (d.code == 11) {
-            pt.rx() = std::get<double>(d._val);
-        } else if (d.code == 21) {
-            pt.ry() = std::get<double>(d._val);
+        } else if (d.code() == 11) {
+            pt.rx() = d;
+        } else if (d.code() == 21) {
+            pt.ry() = d;
 
             poly.append(pt);
-        } else if (d.code == 40) {
-            width = std::get<double>(d._val);
-        } else if (d.code == 41) {
-            width2 = std::get<double>(d._val);
+        } else if (d.code() == 40) {
+            width = d;
+        } else if (d.code() == 41) {
+            width2 = d;
         }
     }
 
@@ -61,10 +61,10 @@ void POLYLINE::parse(CodeData& code)
         // Прочитать другую пару код / значение
         data << (code = sp->nextCode());
         parseEntity(code);
-    } while (code.rawVal != "SEQEND");
+    } while (code != "SEQEND");
     do {
         // Прочитать другую пару код / значение
         data << (code = sp->nextCode());
         parseEntity(code);
-    } while (code.code != 0);
+    } while (code.code() != 0);
 }

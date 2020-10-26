@@ -13,25 +13,15 @@ void SectionHEADER::parse()
 {
     CodeData code;
     QString key;
-    while (code.rawVal != "ENDSEC") {
+    while (code != "ENDSEC") {
         // Прочитать другую пару код / значение
         code = nextCode();
-        if (code.rawVal.startsWith('$')) {
-            key = code.rawVal;
-        } else if (code.rawVal == "ENDSEC") {
+        if (code.type() == CodeData::String && QString(code).startsWith('$')) {
+            key = code.code();
+        } else if (code == "ENDSEC") {
             break;
         } else if (!key.isEmpty()) {
-            switch (code.type) {
-            case CodeData::String:
-                header.data[key][code.code] = std::get<QString>(code._val);
-                break;
-            case CodeData::Double:
-                header.data[key][code.code] = std::get<double>(code._val);
-                break;
-            case CodeData::Integer:
-                header.data[key][code.code] = std::get<qint64>(code._val);
-                break;
-            }
+            header.data[key][code.code()] = code.value();
         }
     }
     if constexpr (0) {

@@ -1,6 +1,8 @@
 #include "graphicsview.h"
 
+#include <QDebug>
 #include <QGLWidget>
+#include <QMimeData>
 #include <QScrollBar>
 #include <QWheelEvent>
 
@@ -29,6 +31,7 @@ GraphicsView::GraphicsView(QWidget* parent)
 
     setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::AlphaChannel | QGL::Rgba)));
     ////////////////////////////////////
+    setAcceptDrops(true);
 }
 
 double GraphicsView::getScale()
@@ -163,4 +166,28 @@ void GraphicsView::mouseMoveEvent(QMouseEvent* event)
     //    mouseMove(point);
     //    ShapePr::Constructor::updateShape(point);
     QGraphicsView::mouseMoveEvent(event);
+}
+
+void GraphicsView::dragEnterEvent(QDragEnterEvent* event)
+{
+    if (event->mimeData()->hasUrls())
+        event->acceptProposedAction();
+    else
+        event->ignore();
+}
+
+void GraphicsView::dragMoveEvent(QDragMoveEvent* event)
+{
+    event->acceptProposedAction();
+}
+
+void GraphicsView::dropEvent(QDropEvent* event)
+{
+    for (QUrl& url : event->mimeData()->urls()) {
+        if (url.path().endsWith(".dxf", Qt::CaseInsensitive)) {
+            emit fileDroped(url.path().remove(0, 1));
+            break;
+        }
+    }
+    event->acceptProposedAction();
 }

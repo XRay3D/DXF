@@ -18,6 +18,8 @@ MainWindow::MainWindow(QWidget* parent)
     ui->graphicsView->setScene(scene = new QGraphicsScene(ui->graphicsView));
     ui->graphicsView->scene()->setObjectName("scene");
 
+    connect(ui->graphicsView, &GraphicsView::fileDroped, this, &MainWindow::testReading);
+
     {
         QSettings s("dxf.ini", QSettings::IniFormat);
         restoreState(s.value("State").toByteArray());
@@ -43,7 +45,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    ui->tableView->setModel(nullptr);
+    qDebug() << ui->lineEdit->text();
+    if (ui->tableView->model())
+        delete ui->tableView->model();
+    ui->tableView->setModel(new LayerModel({}));
     scene->clear();
     const QString str(ui->lineEdit->text());
     if (dxf.read(str)) {
@@ -51,19 +56,13 @@ void MainWindow::on_pushButton_clicked()
         ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     }
-    //    testReading(ui->lineEdit->text().toLocal8Bit().data());
 }
 
-void MainWindow::testReading(char* file)
+void MainWindow::testReading(const QString& file)
 {
-    // Load DXF file into memory:
-    //    qWarning() << "Reading file " << file << "...\n";
-    //    Test_CreationClass* creationClass = new Test_CreationClass();
-    //    DL_Dxf* dxf = new DL_Dxf();
-    //    if (!dxf->in(file, creationClass)) { // if file open failed
-    //        qWarning() << file << " could not be opened.\n";
-    //        return;
-    //    }
-    //    delete dxf;
-    //    delete creationClass;
+    qDebug() << file;
+    ui->tableView->setEnabled(false);
+    ui->lineEdit->setText(file);
+    on_pushButton_clicked();
+    ui->tableView->setEnabled(true);
 }

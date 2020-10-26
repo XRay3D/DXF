@@ -8,21 +8,15 @@ Entity::Entity(SectionParser* sp)
 {
 }
 
-int Entity::toType(const QString& key)
-{
-    return staticMetaObject.enumerator(0).keyToValue(key.toLocal8Bit().toUpper().data());
-}
+int Entity::toType(const QString& key) { return staticMetaObject.enumerator(0).keyToValue(key.toLocal8Bit().toUpper().data()); }
 
-QString Entity::toType(int key)
-{
-    return staticMetaObject.enumerator(0).valueToKey(key);
-}
+QString Entity::toType(int key) { return staticMetaObject.enumerator(0).valueToKey(key); }
 
 void Entity::parseEntity(CodeData& code)
 {
-    switch (code.code) {
+    switch (code.code()) {
     case LayerName:
-        layerName = code.getString();
+        layerName = QString(code);
         break;
     default:
         break;
@@ -33,7 +27,6 @@ QColor Entity::color() const
 {
     if (auto layer = DxfFile::layer(layerName); layer) {
         QColor c(dxfColors[layer->colorNumber]);
-        //c.setAlpha(125);
         return c;
     }
     qDebug(Q_FUNC_INFO);

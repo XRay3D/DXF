@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 #include "dxf/dxf.h"
 #include <QMainWindow>
 
@@ -25,7 +23,5 @@ private:
     DxfFile dxf;
     Ui::MainWindow* ui;
 
-    void testReading(char* file);
-
+    void testReading(const QString& file);
 };
-

@@ -6,7 +6,7 @@
 #include <QVector>
 
 struct SectionParser {
-public:
+
     explicit SectionParser(QVector<CodeData>&& data);
     virtual ~SectionParser() = default;
     virtual void parse() = 0;
@@ -23,6 +23,8 @@ public:
         return debug;
     }
 
+    const QVector<CodeData> data;
+
     enum sec {
         Null,
         HEADER,
@@ -33,10 +35,7 @@ public:
         OBJECTS,
         THUMBNAILIMAGE,
     };
-
-    const QVector<CodeData> data;
-    const sec type;
-
-    Q_GADGET
     Q_ENUM(sec)
+    const sec type;
+    Q_GADGET
 };

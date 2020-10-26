@@ -21,34 +21,23 @@ DxfFile::~DxfFile() { qDeleteAll(sections); }
 
 bool DxfFile::read(const QString& fileName)
 {
-    //    Entity::CIRCLE;
-    //    Entity::INSERT;
-    //    Entity::LINE;
-    //    Entity::POLYLINE;
-    //    Entity::SOLID;
-
-    //    1	Entity::INSERT
-    //    1	Entity::SOLID
-    //    1	Entity::POLYLINE
-    //    1	Entity::CIRCLE
-    //    1	Entity::LINE
-
-    //    Open dxfFile For Input As #1
     file.setFileName(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
 
     in.setDevice(&file);
-    //    while (!in.atEnd()) {
-    //    }
+
     int ctr = 0;
     QVector<CodeData> codes;
     do {
-        QString codeStr(in.readLine());
-        QString valStr(in.readLine());
-        codes.append({ codeStr.toInt(), valStr, ctr += 2 });
-        if (codes.last().rawVal == "ENDSEC") {
-            switch (SectionParser::key(codes[1].rawVal)) {
+        codes.append({ in.readLine().toInt(), in.readLine(), ctr });
+        ctr += 2;
+        qDebug() << codes.last();
+        if (codes.last() == "ENDSEC") {
+            int bsec = 0;
+            while (codes[bsec++] != "SECTION" && bsec < codes.size())
+                continue;
+            switch (SectionParser::key(QString(codes[bsec]))) {
             case SectionParser::HEADER:
                 sections << new SectionHEADER(header, std::move(codes));
                 break;
@@ -71,12 +60,13 @@ bool DxfFile::read(const QString& fileName)
                 sections << new SectionTHUMBNAILIMAGE(std::move(codes));
                 break;
             default:
-                //throw codes.last().rawVal;
+                //throw codes.last();
                 break;
             }
-            sections.last()->parse();
+            if (sections.size())
+                sections.last()->parse();
         }
-    } while (!in.atEnd() || codes.last().rawVal != "EOF");
+    } while (!in.atEnd() || codes.last() != "EOF");
 
     file.close();
     for (SectionParser* s : sections) {

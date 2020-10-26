@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 #include <QGraphicsView>
 
 class GraphicsView final : public QGraphicsView {
@@ -15,7 +13,9 @@ public:
     double getScale();
     void zoomIn();
     void zoomOut();
+
 signals:
+    void fileDroped(const QString&);
 
     // QWidget interface
 protected:
@@ -24,6 +24,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent* event) override;
     void mouseDoubleClickEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
+
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dragMoveEvent(QDragMoveEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
 };
-
-

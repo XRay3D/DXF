@@ -10,15 +10,15 @@ void APPID::parse(CodeData& code)
     do {
         data << code;
         code = sp->nextCode();
-        switch (code.code) {
+        switch (code.code()) {
         case SubclassMarker:
             break;
         case ApplicationName:
-            applicationName = code.getString();
+            applicationName = code;
             break;
         case StandardFlag:
-            standardFlag = code.getInteger();
+            standardFlag = code;
             break;
         }
-    } while (code.code != 0);
+    } while (code.code() != 0);
 }

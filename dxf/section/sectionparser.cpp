@@ -5,7 +5,7 @@
 
 SectionParser::SectionParser(QVector<CodeData>&& data)
     : data(std::move(data))
-    , type(static_cast<sec>(key(this->data[1].rawVal)))
+    , type(static_cast<sec>(key(this->data[1])))
 {
 }
 

@@ -18,21 +18,21 @@ void HATCH::draw(const INSERT_ET* const i) const
     QPointF pt;
     double width = 0;
     for (auto& d : data) {
-        if (d.code == 10) {
-            pt.rx() = std::get<double>(d._val);
-        } else if (d.code == 20) {
-            pt.ry() = std::get<double>(d._val);
+        if (d.code() == 10) {
+            pt.rx() = d;
+        } else if (d.code() == 20) {
+            pt.ry() = d;
             if (!pt.isNull())
                 poly.append(pt);
-        } else if (d.code == 11) {
-            pt.rx() = std::get<double>(d._val);
-        } else if (d.code == 21) {
-            pt.ry() = std::get<double>(d._val);
+        } else if (d.code() == 11) {
+            pt.rx() = d;
+        } else if (d.code() == 21) {
+            pt.ry() = d;
             if (!pt.isNull())
                 poly.append(pt);
-        } else if (d.code == 40) {
-            width = std::get<double>(d._val);
-        } else if (d.code == 92) {
+        } else if (d.code() == 40) {
+            width = d;
+        } else if (d.code() == 92) {
             path.addPolygon(poly);
             poly.clear();
         }
@@ -52,5 +52,5 @@ void HATCH::parse(CodeData& code)
         data << code;
         code = sp->nextCode();
         parseEntity(code);
-    } while (code.code != 0);
+    } while (code.code() != 0);
 }

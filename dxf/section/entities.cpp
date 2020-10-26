@@ -21,7 +21,7 @@ SectionENTITIES::SectionENTITIES(QMap<QString, Block*>& blocks, CodeData& code, 
 {
     do {
         iParse(code);
-    } while (code.rawVal != "ENDBLK");
+    } while (code != "ENDBLK");
     qDebug() << entitiesMap.keys();
 }
 
@@ -30,8 +30,8 @@ void SectionENTITIES::parse()
     code = nextCode();
     code = nextCode();
     code = nextCode();
-    while (code.rawVal != "ENDSEC") {
-        if (code.rawVal == "ENDSEC")
+    while (code != "ENDSEC") {
+        if (code == "ENDSEC")
             break;
         iParse(code);
     }
@@ -54,60 +54,59 @@ void SectionENTITIES::parse()
 
 void SectionENTITIES::iParse(CodeData& code)
 {
-    key = static_cast<Entity::Type>(Entity::toType(code.rawVal));
+    key = static_cast<Entity::Type>(Entity::toType(code.operator QString()));
 
     switch (key) {
     case Entity::ACAD_PROXY_ENTITY:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::ARC:
-        qDebug() << key << code.rawVal;
-        exit(-1000);
+        entities.append(new ARC(sp));
         break;
     case Entity::ATTDEF:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::ATTRIB:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::BODY:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::CIRCLE:
         entities.append(new CIRCLE(sp));
         break;
     case Entity::DIMENSION:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::ELLIPSE:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::HATCH:
         entities.append(new HATCH(sp));
         break;
     case Entity::HELIX:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::IMAGE:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::INSERT:
         entities.append(new INSERT_ET(blocks, sp));
         break;
     case Entity::LEADER:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::LIGHT:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::LINE:
@@ -117,108 +116,108 @@ void SectionENTITIES::iParse(CodeData& code)
         entities.append(new LWPOLYLINE(sp));
         break;
     case Entity::MESH:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::MLEADER:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::MLEADERSTYLE:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::MLINE:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::MTEXT:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::OLE2FRAME:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::OLEFRAME:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::POINT:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::POLYLINE: ////////////
         entities.append(new POLYLINE(sp));
         break;
     case Entity::RAY:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::REGION:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::SECTION:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::SEQEND:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::SHAPE:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::SOLID:
         entities.append(new SOLID(sp));
         break;
     case Entity::SPLINE:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::SUN:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::SURFACE:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::TABLE:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::TEXT:
         entities.append(new TEXT(sp));
         break;
     case Entity::TOLERANCE:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::TRACE:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::UNDERLAY:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::VERTEX:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::VIEWPORT:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::WIPEOUT:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     case Entity::XLINE:
-        qDebug() << key << code.rawVal;
+        qDebug() << key << code;
         exit(-1000);
         break;
     default:

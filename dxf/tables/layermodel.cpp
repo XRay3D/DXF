@@ -11,24 +11,21 @@ LayerModel::LayerModel(QMap<QString, LAYER*> layers, QObject* parent)
 {
 }
 
-int LayerModel::rowCount(const QModelIndex& /*parent*/) const
-{
-    return names.size();
-}
+int LayerModel::rowCount(const QModelIndex& /*parent*/) const { return names.size(); }
 
-int LayerModel::columnCount(const QModelIndex& /*parent*/) const
-{
-    return 1;
-}
+int LayerModel::columnCount(const QModelIndex& /*parent*/) const { return 1; }
 
 QVariant LayerModel::data(const QModelIndex& index, int role) const
 {
     if (role == Qt::DisplayRole) {
-        return layers[names[index.row()]]->gig->isVisible();
+        if (layers[names[index.row()]]->gig)
+            return layers[names[index.row()]]->gig->isVisible();
     } else if (role == Qt::CheckStateRole) {
-        return (layers[names[index.row()]]->gig->isVisible()) ? Qt::Checked : Qt::Unchecked;
+        if (layers[names[index.row()]]->gig)
+            return (layers[names[index.row()]]->gig->isVisible()) ? Qt::Checked : Qt::Unchecked;
     } else if (role == Qt::EditRole) {
-        return static_cast<int>(layers[names[index.row()]]->gig->isVisible());
+        if (layers[names[index.row()]]->gig)
+            return static_cast<int>(layers[names[index.row()]]->gig->isVisible());
     } else if (role == Qt::DecorationRole) {
         QColor color(dxfColors[layers[names[index.row()]]->colorNumber]);
         color.setAlpha(255);
@@ -64,7 +61,4 @@ QVariant LayerModel::headerData(int section, Qt::Orientation orientation, int ro
     return QAbstractTableModel ::headerData(section, orientation, role);
 }
 
-Qt::ItemFlags LayerModel::flags(const QModelIndex& /*index*/) const
-{
-    return /*Qt::ItemIsEditable |*/ Qt::ItemIsEnabled | Qt::ItemIsUserCheckable;
-}
+Qt::ItemFlags LayerModel::flags(const QModelIndex& /*index*/) const { return Qt::ItemIsEnabled | Qt::ItemIsUserCheckable; }

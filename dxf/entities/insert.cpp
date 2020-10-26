@@ -50,44 +50,44 @@ void INSERT_ET::parse(CodeData& code)
 {
     data << code;
     do {
-        switch (code.code) {
+        switch (code.code()) {
         case SubclassMrker:
             break;
         case var66:
             break;
         case BlockName:
-            blockName = code.getString();
+            blockName = QString(code);
             break;
         case InsPtX:
-            insPt.rx() = code.getDouble();
+            insPt.rx() = code;
             break;
         case InsPtY:
-            insPt.ry() = code.getDouble();
+            insPt.ry() = code;
             break;
         case InsPtZ:
             break;
         case ScaleX:
-            scaleX = code.getDouble();
+            scaleX = code;
             break;
         case ScaleY:
-            scaleY = code.getDouble();
+            scaleY = code;
             break;
         case ScaleZ:
             break;
         case RotationAngle:
-            rotationAngle = code.getDouble();
+            rotationAngle = code;
             break;
         case ColCount:
-            colCount = code.getInteger();
+            colCount = code;
             break;
         case RowCount:
-            rowCount = code.getInteger();
+            rowCount = code;
             break;
         case ColSpacing:
-            colSpacing = code.getDouble();
+            colSpacing = code;
             break;
         case RowSpacing:
-            rowSpacing = code.getDouble();
+            rowSpacing = code;
             break;
         case ExtrDirX:
             break;
@@ -99,7 +99,7 @@ void INSERT_ET::parse(CodeData& code)
             parseEntity(code);
         }
         data << (code = sp->nextCode());
-    } while (code.code != 0);
+    } while (code.code() != 0);
 }
 
 void INSERT_ET::transform(QGraphicsItem* item, QPointF tr) const

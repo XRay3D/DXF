@@ -14,26 +14,26 @@ void LAYER::parse(CodeData& code)
 {
     do {
         data << code;
-        switch (code.code) {
+        switch (code.code()) {
         case SubclassMarker:
             break;
         case LayerName:
-            name = code.getString();
+            name = code;
             break;
         case Flags:
-            flags = code.getInteger();
+            flags = code;
             break;
         case ColorNumber:
-            colorNumber = code.getInteger();
+            colorNumber = code;
             break;
         case LineTypeName:
-            lineTypeName = code.getString();
+            lineTypeName = code;
             break;
         case PlottingFlag:
-            plottingFlag = code.getInteger();
+            plottingFlag = code;
             break;
         case LineWeightEnum:
-            lineWeightEnum = code.getInteger();
+            lineWeightEnum = code;
             break;
         case PlotStyleNameID:
             break;
@@ -41,5 +41,5 @@ void LAYER::parse(CodeData& code)
             break;
         }
         code = sp->nextCode();
-    } while (code.code != 0);
+    } while (code.code() != 0);
 }

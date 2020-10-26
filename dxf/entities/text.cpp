@@ -71,25 +71,25 @@ void TEXT::draw(const INSERT_ET* const i) const
 void TEXT::parse(CodeData& code)
 {
     do {
-        switch (code.code) {
+        switch (code.code()) {
         case SubclassMarker:
             break;
         case Thickness:
-            thickness = code.getDouble();
+            thickness = code;
             break;
         case FirstAlignmentPtX:
-            pt1.rx() = code.getDouble();
+            pt1.rx() = code;
             break;
         case FirstAlignmentPtY:
-            pt1.ry() = code.getDouble();
+            pt1.ry() = code;
             break;
         case FirstAlignmentPtZ:
             break;
         case TextHeight:
-            textHeight = code.getDouble();
+            textHeight = code;
             break;
         case Text:
-            text = code.getString();
+            text = QString(code);
             break;
         case Rotation:
             break;
@@ -100,19 +100,19 @@ void TEXT::parse(CodeData& code)
         case TextStyleName:
             break;
         case TextGenerationFlags:
-            textGenerationFlags = static_cast<TextGenerationFlagsE>(code.getInteger());
+            textGenerationFlags = static_cast<TextGenerationFlagsE>(code.operator long long());
             break;
         case HorizontalJustType:
-            horizontalJustType = static_cast<HorizontalJustTypeE>(code.getInteger());
+            horizontalJustType = static_cast<HorizontalJustTypeE>(code.operator long long());
             break;
         case VerticalJustType:
-            verticalJustType = static_cast<VerticalJustTypeE>(code.getInteger());
+            verticalJustType = static_cast<VerticalJustTypeE>(code.operator long long());
             break;
         case SecondAlignmentPointX:
-            pt2.rx() = code.getDouble();
+            pt2.rx() = code;
             break;
         case SecondAlignmentPointY:
-            pt2.ry() = code.getDouble();
+            pt2.ry() = code;
             break;
         case SecondAlignmentPointZ:
             break;
@@ -126,5 +126,5 @@ void TEXT::parse(CodeData& code)
             parseEntity(code);
         }
         code = sp->nextCode();
-    } while (code.code != 0);
+    } while (code.code() != 0);
 }

@@ -30,25 +30,25 @@ void LINE::parse(CodeData& code)
 {
     do {
         data << code;
-        switch (static_cast<VarType>(code.code)) {
+        switch (static_cast<VarType>(code.code())) {
         case SubclassMarker:
             break;
         case Thickness:
-            thickness = code.getDouble();
+            thickness = code;
             break;
         case StartPointX:
-            startPoint.rx() = code.getDouble();
+            startPoint.rx() = code;
             break;
         case StartPointY:
-            startPoint.ry() = code.getDouble();
+            startPoint.ry() = code;
             break;
         case StartPointZ:
             break;
         case EndPointX:
-            endPoint.rx() = code.getDouble();
+            endPoint.rx() = code;
             break;
         case EndPointY:
-            endPoint.ry() = code.getDouble();
+            endPoint.ry() = code;
             break;
         case EndPointZ:
             break;
@@ -62,5 +62,5 @@ void LINE::parse(CodeData& code)
             parseEntity(code);
         }
         code = sp->nextCode();
-    } while (code.code != 0);
+    } while (code.code() != 0);
 }

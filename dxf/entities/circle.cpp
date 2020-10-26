@@ -18,8 +18,8 @@ void CIRCLE::draw(const INSERT_ET* const i) const
         for (int r = 0; r < i->rowCount; ++r) {
             for (int c = 0; c < i->colCount; ++c) {
                 QPointF tr(r * i->rowSpacing, r * i->colSpacing);
-                QPointF r(radius, radius);
-                auto item = scene->addEllipse(QRectF(centerPoint - r, centerPoint + r), QPen(i->color(), thickness /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush);
+                QPointF rad(radius, radius);
+                auto item = scene->addEllipse(QRectF(centerPoint - rad, centerPoint + rad), QPen(i->color(), thickness /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush);
                 item->setToolTip(layerName);
                 i->transform(item, tr);
                 i->attachToLayer(item);
@@ -36,22 +36,22 @@ void CIRCLE::parse(CodeData& code)
 {
     do {
         data << code;
-        switch (static_cast<VarType>(code.code)) {
+        switch (static_cast<VarType>(code.code())) {
         case SubclassMarker:
             break;
         case Thickness:
-            thickness = code.getDouble();
+            thickness = code;
             break;
         case CenterPointX:
-            centerPoint.rx() = code.getDouble();
+            centerPoint.rx() = code;
             break;
         case CenterPointY:
-            centerPoint.ry() = code.getDouble();
+            centerPoint.ry() = code;
             break;
         case CenterPointZ:
             break;
         case Radius:
-            radius = code.getDouble();
+            radius = code;
             break;
         case ExtrDirX:
             break;
@@ -63,5 +63,5 @@ void CIRCLE::parse(CodeData& code)
             parseEntity(code);
         }
         code = sp->nextCode();
-    } while (code.code != 0);
+    } while (code.code() != 0);
 }

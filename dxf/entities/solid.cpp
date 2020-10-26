@@ -41,45 +41,45 @@ void SOLID::parse(CodeData& code)
 {
     do {
         data << code;
-        switch (static_cast<VarType>(code.code)) {
+        switch (static_cast<VarType>(code.code())) {
         case SubclassMarker:
             break;
         case Thickness:
-            thickness = code.getDouble();
+            thickness = code;
             break;
         case FirstCornerX:
-            firstCorner.rx() = code.getDouble();
+            firstCorner.rx() = code;
             corners |= FirstCorner;
             break;
         case FirstCornerY:
-            firstCorner.ry() = code.getDouble();
+            firstCorner.ry() = code;
             break;
         case FirstCornerZ:
             break;
         case SecondCornerX:
-            secondCorner.rx() = code.getDouble();
+            secondCorner.rx() = code;
             corners |= SecondCorner;
             break;
         case SecondCornerY:
-            secondCorner.ry() = code.getDouble();
+            secondCorner.ry() = code;
             break;
         case SecondCornerZ:
             break;
         case ThirdCornerX:
-            thirdCorner.rx() = code.getDouble();
+            thirdCorner.rx() = code;
             corners |= ThirdCorner;
             break;
         case ThirdCornerY:
-            thirdCorner.ry() = code.getDouble();
+            thirdCorner.ry() = code;
             break;
         case ThirdCornerZ:
             break;
         case FourthCornerX:
-            fourthCorner.rx() = code.getDouble();
+            fourthCorner.rx() = code;
             corners |= FourthCorner;
             break;
         case FourthCornerY:
-            fourthCorner.ry() = code.getDouble();
+            fourthCorner.ry() = code;
             break;
         case FourthCornerZ:
             break;
@@ -93,5 +93,5 @@ void SOLID::parse(CodeData& code)
             parseEntity(code);
         }
         code = sp->nextCode();
-    } while (code.code != 0);
+    } while (code.code() != 0);
 }

@@ -10,9 +10,9 @@ SectionBLOCKS::SectionBLOCKS(QMap<QString, Block*>& blocks, QVector<CodeData>&& 
 void SectionBLOCKS::parse()
 {
     CodeData code;
-    while (code.rawVal != "ENDSEC") {
+    while (code != "ENDSEC") {
         code = nextCode();
-        if (code.rawVal == "BLOCK") {
+        if (code == "BLOCK") {
             auto block = new Block(blocks, this);
             block->parse(code);
             if (!block->blockName.isEmpty()) {

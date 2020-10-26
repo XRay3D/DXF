@@ -14,14 +14,14 @@ void SectionTABLES::parse()
     CodeData code;
     code = nextCode();
     code = nextCode();
-    while (code.rawVal != "ENDSEC") {
+    while (code != "ENDSEC") {
         // Прочитать другую пару код / значение
         code = nextCode();
-        if (code.rawVal == "TABLE") {
+        if (code == "TABLE") {
             tables.resize(tables.size() + 1);
             code = nextCode();
             do {
-                switch (TableItem::toType(code.rawVal)) {
+                switch (TableItem::toType(code)) {
                 case TableItem::APPID:
                     tables.last().append(new APPID(this));
                     tables.last().last()->parse(code);
@@ -61,7 +61,7 @@ void SectionTABLES::parse()
                     tables.last().last()->parse(code);
                     break;
                 }
-            } while (code.rawVal != "ENDTAB");
+            } while (code != "ENDTAB");
         }
     }
 }

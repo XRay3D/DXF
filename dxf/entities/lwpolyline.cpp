@@ -39,6 +39,8 @@ class ArcItem final : public QGraphicsItem {
             path.lineTo(b);
             return;
         }
+        return;
+
         const QLineF l1(a, b);
         const double lenght = l1.length() * 0.5;
         const double height = lenght * a.bulge;
@@ -49,21 +51,23 @@ class ArcItem final : public QGraphicsItem {
 
         QPointF c(l2.p2());
 
-        double ax2 = a.x() * a.x();
-        double bx2 = b.x() * b.x();
-        double cx2 = c.x() * c.x();
+        {
+            double ax2 = a.x() * a.x();
+            double bx2 = b.x() * b.x();
+            double cx2 = c.x() * c.x();
 
-        double ay2 = a.y() * a.y();
-        double by2 = b.y() * b.y();
-        double cy2 = c.y() * c.y();
-        double D = a.x() * b.y() + a.y() * c.x() - b.y() * c.x() - a.x() * c.y() - b.x() * a.y() + b.x() * c.y();
+            double ay2 = a.y() * a.y();
+            double by2 = b.y() * b.y();
+            double cy2 = c.y() * c.y();
+            double D = a.x() * b.y() + a.y() * c.x() - b.y() * c.x() - a.x() * c.y() - b.x() * a.y() + b.x() * c.y();
 
-        o.rx() = +0.5 / D * ( //
-                     +a.y() * cx2 + a.y() * cy2 + b.y() * ax2 + b.y() * ay2 + c.y() * bx2 + c.y() * by2 //
-                     - a.y() * bx2 - a.y() * by2 - b.y() * cx2 - b.y() * cy2 - c.y() * ax2 - c.y() * ay2);
-        o.ry() = -0.5 / D * ( //
-                     +a.x() * cx2 + a.x() * cy2 + b.x() * ax2 + b.x() * ay2 + c.x() * bx2 + c.x() * by2 //
-                     - a.x() * bx2 - a.x() * by2 - b.x() * cx2 - b.x() * cy2 - c.x() * ax2 - c.x() * ay2);
+            o.rx() = +0.5 / D * ( //
+                         a.y() * cx2 + a.y() * cy2 + b.y() * ax2 + b.y() * ay2 + c.y() * bx2 + c.y() * by2 - //
+                         a.y() * bx2 - a.y() * by2 - b.y() * cx2 - b.y() * cy2 - c.y() * ax2 - c.y() * ay2);
+            o.ry() = -0.5 / D * ( //
+                         a.x() * cx2 + a.x() * cy2 + b.x() * ax2 + b.x() * ay2 + c.x() * bx2 + c.x() * by2 - //
+                         a.x() * bx2 - a.x() * by2 - b.x() * cx2 - b.x() * cy2 - c.x() * ax2 - c.x() * ay2);
+        }
 
         //path.addEllipse(QRectF(o - QPointF(0.1, 0.1), o + QPointF(0.1, 0.1))); ///////dbg
 
@@ -71,12 +75,7 @@ class ArcItem final : public QGraphicsItem {
         path1.lineTo(b);
         path1.lineTo(c);
         path1.lineTo(a);
-        qDebug() << "\nA" << a
-                 << "\nB" << b
-                 << "\nC" << c;
-        //        path1.addEllipse(QRectF(a - QPointF(0.05, 0.05), a + QPointF(0.05, 0.05))); ///////dbg
-        //        path1.addEllipse(QRectF(b - QPointF(0.05, 0.05), b + QPointF(0.05, 0.05))); ///////dbg
-        //        path1.addEllipse(QRectF(c - QPointF(0.1, 0.1), c + QPointF(0.1, 0.1))); ///////dbg
+
         path1.addEllipse(QRectF(c - QPointF(0.1, 0.1), c + QPointF(0.1, 0.1))); ///////dbg
 
         QRectF br(o + QPointF(radius, radius), o - QPointF(radius, radius));
@@ -98,30 +97,15 @@ class ArcItem final : public QGraphicsItem {
                      << "\nB" << bAngle;
             do {
                 double angle = bAngle - aAngle;
+                qDebug() << "A1" << angle;
                 if (angle < 0)
                     angle += 360;
                 if (aAngle < 0 || bAngle < 0)
                     break;
                 //path.moveTo(b);
-                path.arcTo(br, aAngle, angle);
+                path.arcTo(br, bAngle, angle - 360);
+                qDebug() << "A1" << (angle - 360);
             } while (0);
-
-            qDebug() << "A" << aAngle
-                     << "\nB" << bAngle;
-
-            //            aAngle -= 180;
-            //            bAngle -= 180;
-            //            if (aAngle > bAngle) {
-            //                bAngle = (bAngle - aAngle);
-            //                //                path.moveTo(a);
-            //                //                path.arcTo(QRectF(o + QPointF(rad, rad), o - QPointF(rad, rad)), aAngle, bAngle);
-            //            } else {
-            //                bAngle = (bAngle - aAngle) - 360;
-            //                //                path.moveTo(a);
-            //                //                path.arcTo(QRectF(o + QPointF(rad, rad), o - QPointF(rad, rad)), aAngle, bAngle);
-            //            }
-            //            qDebug() << "\nA" << aAngle
-            //                     << "\nB" << bAngle;
         }
     }
 
@@ -129,22 +113,20 @@ public:
     ArcItem(const LWPOLYLINE* lwpl, const QColor& color)
         : lwpl(lwpl)
         , color(color)
-
     {
         for (int i = 0; i < lwpl->poly.size() - 1; ++i) {
             addSeg(lwpl->poly[i], lwpl->poly[i + 1]);
         }
     }
+
     ~ArcItem() = default;
 
     // QGraphicsItem interface
-    QRectF boundingRect() const override
-    {
-        return path.boundingRect();
-    }
+    QRectF boundingRect() const override { return path.boundingRect(); }
+
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/) override
     {
-        painter->setPen(QPen(Qt::red /*color*/, lwpl->constantWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+        painter->setPen(QPen(color, lwpl->constantWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         painter->setBrush(Qt::NoBrush);
         painter->drawPath(path);
 
@@ -210,41 +192,41 @@ void LWPOLYLINE::parse(CodeData& code)
     Segment pt;
     do {
         data << code;
-        switch (static_cast<VarType>(code.code)) {
+        switch (static_cast<VarType>(code.code())) {
         case SubclassMrker:
             break;
         case NumberOfVertices:
-            numberOfVertices = code.getInteger();
+            numberOfVertices = code;
             break;
         case PolylineFlag:
-            polylineFlag = code.getInteger();
+            polylineFlag = code;
             break;
         case ConstantWidth:
-            constantWidth = code.getDouble();
+            constantWidth = code;
             break;
         case Elevation:
-            elevation = code.getDouble();
+            elevation = code;
             break;
         case Thickness:
-            thickness = code.getDouble();
+            thickness = code;
             break;
         case VertexCoordinatesX:
-            pt.rx() = code.getDouble();
+            pt.rx() = code;
             break;
         case VertexCoordinatesY:
-            pt.ry() = code.getDouble();
+            pt.ry() = code;
             poly << pt;
             break;
         case VertexID:
             break;
         case StartWidth:
-            startWidth = code.getDouble();
+            startWidth = code;
             break;
         case EndWidth:
-            endWidth = code.getDouble();
+            endWidth = code;
             break;
         case Bulge: // betven points
-            poly.last().bulge = code.getDouble();
+            poly.last().bulge = code;
             break;
         case ExtrDirX:
             break;
@@ -256,5 +238,6 @@ void LWPOLYLINE::parse(CodeData& code)
             parseEntity(code);
         }
         code = sp->nextCode();
-    } while (code.code != 0);
+    } while (code.code() != 0);
+    qDebug() << poly.size();
 }

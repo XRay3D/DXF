@@ -14,13 +14,15 @@ SOLID::SOLID(SectionParser* sp)
 void SOLID::draw(const INSERT_ET* const i) const
 {
     QPolygonF poly;
-    if (corners == 15) { //all
+    qDebug() << "corners" << corners;
+    if (corners == 15) {
         poly.reserve(5);
         poly << firstCorner;
         poly << secondCorner;
         poly << fourthCorner;
         poly << thirdCorner;
-        //        poly << firstCorner;
+    } else {
+        exit(-100);
     }
     if (i) {
         for (int r = 0; r < i->rowCount; ++r) {

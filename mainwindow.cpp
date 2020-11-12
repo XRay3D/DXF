@@ -18,7 +18,10 @@ MainWindow::MainWindow(QWidget* parent)
     ui->graphicsView->setScene(scene = new QGraphicsScene(ui->graphicsView));
     ui->graphicsView->scene()->setObjectName("scene");
 
-    connect(ui->graphicsView, &GraphicsView::fileDroped, this, &MainWindow::testReading);
+    connect(ui->graphicsView, &GraphicsView::fileDroped, [](QStringView file) {
+        auto w = new MainWindow(file);
+        w->show();
+    } /* this, &MainWindow::testReading*/);
 
     {
         QSettings s("dxf.ini", QSettings::IniFormat);
@@ -27,6 +30,32 @@ MainWindow::MainWindow(QWidget* parent)
         ui->splitter->restoreState(s.value("Splitter").toByteArray());
         ui->lineEdit->setText(s.value("lineEdit").toString());
     }
+
+    on_pushButton_clicked();
+}
+
+MainWindow::MainWindow(QStringView file, QWidget* parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+    ui->graphicsView->setScene(scene = new QGraphicsScene(ui->graphicsView));
+    ui->graphicsView->scene()->setObjectName("scene");
+    //    connect(ui->graphicsView, &GraphicsView::fileDroped, this, &MainWindow::testReading);
+    connect(ui->graphicsView, &GraphicsView::fileDroped, [](QStringView file) {
+        auto w = new MainWindow(file);
+        w->show();
+    } /* this, &MainWindow::testReading*/);
+
+    {
+        QSettings s("dxf.ini", QSettings::IniFormat);
+        restoreState(s.value("State").toByteArray());
+        restoreGeometry(s.value("Geometry").toByteArray());
+        ui->splitter->restoreState(s.value("Splitter").toByteArray());
+        ui->lineEdit->setText(s.value("lineEdit").toString());
+    }
+
+    ui->lineEdit->setText(file.toString());
 
     on_pushButton_clicked();
 }

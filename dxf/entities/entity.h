@@ -10,19 +10,6 @@ class QGraphicsItem;
 #define ENTITY_H
 
 struct Entity {
-
-    QVector<CodeData> data;
-    SectionParser* sp = nullptr;
-    Entity(SectionParser* sp);
-    virtual ~Entity() {}
-    virtual void draw(const INSERT_ET* const i = nullptr) const = 0;
-    virtual void parse(CodeData& code) = 0;
-    static int toType(const QString& key);
-    static QString toType(int key);
-    void parseEntity(CodeData& code);
-    QColor color() const;
-    void attachToLayer(QGraphicsItem* item) const;
-
     enum Type {
         ACAD_PROXY_ENTITY,
         ARC,
@@ -71,9 +58,22 @@ struct Entity {
         //3DSOLID,
     };
 
+    QVector<CodeData> data;
+    SectionParser* sp = nullptr;
+    Entity(SectionParser* sp);
+    virtual ~Entity() { }
+    virtual void draw(const INSERT_ET* const i = nullptr) const = 0;
+    virtual void parse(CodeData& code) = 0;
+    static Type TypeVal(const QString& key);
+    static QString TypeName(int key);
+    void parseEntity(CodeData& code);
+    QColor color() const;
+    void attachToLayer(QGraphicsItem* item) const;
+
     virtual Type type() const = 0;
 
     QString layerName;
+    QString handle;
 
     enum VarType {
         EntityName = -1, //    Приложение: имя объекта (изменяется при каждом открытии чертежа)

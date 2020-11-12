@@ -4,10 +4,20 @@
 #include <QGraphicsItemGroup>
 #include <QPainter>
 
-LayerModel::LayerModel(QMap<QString, LAYER*> layers, QObject* parent)
+static QStringList keys(const Layers& layers)
+
+{
+    QStringList sl;
+    sl.reserve(layers.size());
+    for (auto& [key, _] : layers)
+        sl.append(key);
+    return sl;
+}
+
+LayerModel::LayerModel(Layers layers, QObject* parent)
     : QAbstractTableModel(parent)
     , layers(layers)
-    , names(layers.keys())
+    , names(keys(layers))
 {
 }
 
@@ -18,16 +28,16 @@ int LayerModel::columnCount(const QModelIndex& /*parent*/) const { return 1; }
 QVariant LayerModel::data(const QModelIndex& index, int role) const
 {
     if (role == Qt::DisplayRole) {
-        if (layers[names[index.row()]]->gig)
-            return layers[names[index.row()]]->gig->isVisible();
+        if (layers.at(names[index.row()])->gig)
+            return layers.at(names[index.row()])->gig->isVisible();
     } else if (role == Qt::CheckStateRole) {
-        if (layers[names[index.row()]]->gig)
-            return (layers[names[index.row()]]->gig->isVisible()) ? Qt::Checked : Qt::Unchecked;
+        if (layers.at(names[index.row()])->gig)
+            return (layers.at(names[index.row()])->gig->isVisible()) ? Qt::Checked : Qt::Unchecked;
     } else if (role == Qt::EditRole) {
-        if (layers[names[index.row()]]->gig)
-            return static_cast<int>(layers[names[index.row()]]->gig->isVisible());
+        if (layers.at(names[index.row()])->gig)
+            return static_cast<int>(layers.at(names[index.row()])->gig->isVisible());
     } else if (role == Qt::DecorationRole) {
-        QColor color(dxfColors[layers[names[index.row()]]->colorNumber]);
+        QColor color(dxfColors[layers.at(names[index.row()])->colorNumber]);
         color.setAlpha(255);
         QPixmap pixmap(22, 22);
         pixmap.fill(Qt::transparent);

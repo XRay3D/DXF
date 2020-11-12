@@ -36,3 +36,5 @@ public:
     int plottingFlag = 0;
     QGraphicsItemGroup* gig;
 };
+
+using Layers = std::map<QString, LAYER*>;

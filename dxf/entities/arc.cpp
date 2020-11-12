@@ -6,6 +6,50 @@
 #include <section/blocks.h>
 #include <section/entities.h>
 
+#include <QGraphicsItem>
+#include <QPainter>
+
+class ArcItem2 : public QGraphicsItem {
+    const ARC* arc;
+    QColor color;
+    QPainterPath path;
+
+public:
+    ArcItem2(const ARC* arc, const QColor& color)
+        : arc(arc)
+        , color(color)
+    {
+        double aspan = arc->endAngle - arc->startAngle;
+
+        if (const bool ccw = arc->endAngle > arc->startAngle;
+            arc->endAngle >= 0 && arc->startAngle >= 0) {
+            if (!ccw)
+                aspan += 360;
+        } else {
+            if (aspan < -180 || (qFuzzyCompare(aspan, -180) && !ccw))
+                aspan += 360;
+            else if (aspan > 180 || (qFuzzyCompare(aspan, 180) && ccw))
+                aspan -= 360;
+        }
+
+        setToolTip(QString("B%1 E%2 S%3").arg(arc->startAngle).arg(arc->endAngle).arg(aspan));
+
+        path.moveTo(QLineF::fromPolar(arc->radius, -arc->startAngle).translated(arc->centerPoint).p2());
+        QPointF rad(arc->radius, arc->radius);
+        path.arcTo(QRectF(arc->centerPoint - rad, arc->centerPoint + rad), -arc->startAngle, -aspan);
+    }
+
+    // QGraphicsItem interface
+public:
+    QRectF boundingRect() const override { return path.boundingRect(); }
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/) override
+    {
+        painter->setPen(QPen(color, arc->thickness));
+        painter->setBrush(Qt::NoBrush);
+        painter->drawPath(path);
+    }
+};
+
 extern QGraphicsScene* scene;
 
 ARC::ARC(SectionParser* sp)
@@ -20,31 +64,17 @@ void ARC::draw(const INSERT_ET* const i) const
             for (int c = 0; c < i->colCount; ++c) {
                 QPointF tr(r * i->rowSpacing, r * i->colSpacing);
                 QPointF rad(radius, radius);
-                QPainterPath path;
-                double aspan = endAngle - startAngle;
-                if (aspan < -180 || (qFuzzyCompare(aspan, -180) && !(endAngle > startAngle)))
-                    aspan += 360;
-                else if (aspan > 180 || (qFuzzyCompare(aspan, 180) && (endAngle > startAngle)))
-                    aspan -= 360;
-                path.moveTo(QLineF::fromPolar(radius, -startAngle).translated(centerPoint).p2());
-                path.arcTo(QRectF(centerPoint - rad, centerPoint + rad), -startAngle, -aspan);
-                auto item = scene->addPath(path, QPen(i->color(), thickness /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush);
-                item->setToolTip(layerName);
+                auto item = new ArcItem2(this, i->color());
+                scene->addItem(item);
+                //                item->setToolTip(layerName);
                 i->transform(item, tr);
                 i->attachToLayer(item);
             }
         }
     } else {
-        QPointF rad(radius, radius);
-        QPainterPath path;
-        double aspan = endAngle - startAngle;
-        if (aspan < -180 || (qFuzzyCompare(aspan, -180) && !(endAngle > startAngle)))
-            aspan += 360;
-        else if (aspan > 180 || (qFuzzyCompare(aspan, 180) && (endAngle > startAngle)))
-            aspan -= 360;
-        path.moveTo(QLineF::fromPolar(radius, -startAngle).translated(centerPoint).p2());
-        path.arcTo(QRectF(centerPoint - rad, centerPoint + rad), -startAngle, -aspan);
-        attachToLayer(scene->addPath(path, QPen(i->color(), thickness /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush));
+        auto item = new ArcItem2(this, color());
+        scene->addItem(item);
+        attachToLayer(item);
     }
 }
 

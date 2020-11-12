@@ -8,15 +8,21 @@ Entity::Entity(SectionParser* sp)
 {
 }
 
-int Entity::toType(const QString& key) { return staticMetaObject.enumerator(0).keyToValue(key.toLocal8Bit().toUpper().data()); }
+Entity::Type Entity::TypeVal(const QString& key)
+{
+    return static_cast<Type>(staticMetaObject.enumerator(0).keyToValue(key.toLocal8Bit().toUpper().data()));
+}
 
-QString Entity::toType(int key) { return staticMetaObject.enumerator(0).valueToKey(key); }
+QString Entity::TypeName(int key) { return staticMetaObject.enumerator(0).valueToKey(key); }
 
 void Entity::parseEntity(CodeData& code)
 {
     switch (code.code()) {
     case LayerName:
-        layerName = QString(code);
+        layerName = code;
+        break;
+    case Handle:
+        handle = code;
         break;
     default:
         break;
@@ -25,8 +31,9 @@ void Entity::parseEntity(CodeData& code)
 
 QColor Entity::color() const
 {
-    if (auto layer = DxfFile::layer(layerName); layer) {
+    if (auto layer = DxfFile::layer(layerName); layer != nullptr) {
         QColor c(dxfColors[layer->colorNumber]);
+        c.setAlpha(200);
         return c;
     }
     qDebug(Q_FUNC_INFO);
@@ -37,6 +44,6 @@ void Entity::attachToLayer(QGraphicsItem* item) const
 {
     if (DxfFile::layer(layerName)) {
         DxfFile::layer(layerName)->gig->addToGroup(item);
-        item->setToolTip(toType(type()));
+        item->setToolTip(TypeName(type()));
     }
 }

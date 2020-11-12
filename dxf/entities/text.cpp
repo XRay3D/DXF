@@ -58,12 +58,20 @@ TEXT::TEXT(SectionParser* sp)
 
 void TEXT::draw(const INSERT_ET* const i) const
 {
-
     if (i) {
-        Q_UNUSED(i)
+        for (int r = 0; r < i->rowCount; ++r) {
+            for (int c = 0; c < i->colCount; ++c) {
+                QPointF tr(r * i->rowSpacing, r * i->colSpacing);
+                auto item = new TextItem(this, i->color());
+                scene->addItem(item);
+                i->transform(item, pt1 + tr);
+                i->attachToLayer(item);
+            }
+        }
     } else {
         auto item = new TextItem(this, color());
         scene->addItem(item);
+        item->setPos(pt1);
         attachToLayer(item);
     }
 }
@@ -127,4 +135,16 @@ void TEXT::parse(CodeData& code)
         }
         code = sp->nextCode();
     } while (code.code() != 0);
+
+//    qDebug() << "TEXT";
+
+//    qDebug() << '\t' << text;
+//    qDebug() << '\t' << pt1 << pt2;
+
+//    qDebug() << '\t' << textGenerationFlags;
+//    qDebug() << '\t' << horizontalJustType;
+//    qDebug() << '\t' << verticalJustType;
+
+//    qDebug() << '\t' << thickness;
+//    qDebug() << '\t' << textHeight;
 }

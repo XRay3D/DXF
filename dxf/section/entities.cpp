@@ -36,7 +36,7 @@ void SectionENTITIES::parse()
         iParse(code);
     }
 
-    for (auto e : entities) {
+    for (auto e : qAsConst(entities)) {
         e->draw();
     }
 
@@ -54,8 +54,8 @@ void SectionENTITIES::parse()
 
 void SectionENTITIES::iParse(CodeData& code)
 {
-    key = static_cast<Entity::Type>(Entity::toType(code.operator QString()));
-
+    key = Entity::TypeVal(code);
+    qDebug() << key << code;
     switch (key) {
     case Entity::ACAD_PROXY_ENTITY:
         qDebug() << key << code;
@@ -65,8 +65,7 @@ void SectionENTITIES::iParse(CodeData& code)
         entities.append(new ARC(sp));
         break;
     case Entity::ATTDEF:
-        qDebug() << key << code;
-        exit(-1000);
+        entities.append(new ATTDEF(sp));
         break;
     case Entity::ATTRIB:
         qDebug() << key << code;
@@ -84,8 +83,10 @@ void SectionENTITIES::iParse(CodeData& code)
         exit(-1000);
         break;
     case Entity::ELLIPSE:
-        qDebug() << key << code;
-        exit(-1000);
+        //        qDebug() << key << code;
+        //        exit(-1000);
+        do {
+        } while (nextCode().code() != 0);
         break;
     case Entity::HATCH:
         entities.append(new HATCH(sp));
@@ -132,8 +133,7 @@ void SectionENTITIES::iParse(CodeData& code)
         exit(-1000);
         break;
     case Entity::MTEXT:
-        qDebug() << key << code;
-        exit(-1000);
+        entities.append(new MTEXT(sp));
         break;
     case Entity::OLE2FRAME:
         qDebug() << key << code;
@@ -174,8 +174,7 @@ void SectionENTITIES::iParse(CodeData& code)
         entities.append(new SOLID(sp));
         break;
     case Entity::SPLINE:
-        qDebug() << key << code;
-        exit(-1000);
+        entities.append(new SPLINE(sp));
         break;
     case Entity::SUN:
         qDebug() << key << code;

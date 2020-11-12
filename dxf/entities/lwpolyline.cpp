@@ -6,106 +6,156 @@
 #include <QPolygonF>
 #include <QtMath>
 
+//QPainterPath construct_path(const Polygon_2& pgn)
+//{
+//    QPainterPath result;
+//    auto toQRectF = [](const CGAL::Bbox_2& bb) -> QRectF {
+//        return QRectF(
+//            bb.xmin(),
+//            bb.ymin(),
+//            bb.xmax() - bb.xmin(),
+//            bb.ymax() - bb.ymin());
+//    };
+//    auto r = toQRectF(pgn.bbox());
+//    if (r.width() * r.height() < 0.001)
+//        return result;
+//    if constexpr (0) {
+//        auto current = pgn.curves_begin();
+//        auto end = pgn.curves_end();
+//        result.moveTo(QPointF(CGAL::to_double(current->source().x()), CGAL::to_double(current->source().y())));
+//        do {
+//            const auto& curve = *current;
+//            const QPointF target = QPointF(CGAL::to_double(curve.target().x()), CGAL::to_double(curve.target().y()));
+//            if (curve.is_linear()) {
+//                result.lineTo(target);
+//            } else if (curve.is_circular()) {
+//                const bool isClockwise = (curve.supporting_circle().orientation() == CGAL::CLOCKWISE);
+//                const QRectF rect = toQRectF(curve.supporting_circle().bbox());
+//                const QPointF center = QPointF(CGAL::to_double(curve.supporting_circle().center().x()), CGAL::to_double(curve.supporting_circle().center().y()));
+//                const QPointF source = QPointF(CGAL::to_double(curve.source().x()), CGAL::to_double(curve.source().y()));
+//                const QPointF p1 = source - center;
+//                const QPointF p2 = target - center;
+//                const double asource = qAtan2(p1.y(), p1.x());
+//                const double atarget = qAtan2(p2.y(), p2.x());
+//                double aspan = atarget - asource;
+//                if (aspan < -CGAL_PI || (qFuzzyCompare(aspan, -CGAL_PI) && !isClockwise))
+//                    aspan += 2.0 * CGAL_PI;
+//                else if (aspan > CGAL_PI || (qFuzzyCompare(aspan, CGAL_PI) && isClockwise))
+//                    aspan -= 2.0 * CGAL_PI;
+//                result.arcTo(rect.normalized(), qRadiansToDegrees(-asource), qRadiansToDegrees(-aspan));
+//            }
+//        } while (++current != end);
+//    } else {
+//        Q_ASSERT(pgn.orientation() == CGAL::CLOCKWISE || pgn.orientation() == CGAL::COUNTERCLOCKWISE);
+//        // Degenerate polygon, ring.size() < 3
+//        if (pgn.orientation() == CGAL::ZERO) {
+//            qWarning() << "construct_path: Ignoring degenerated polygon";
+//            return result;
+//        }
+//        const bool isClockwise = pgn.orientation() == CGAL::CLOCKWISE;
+//        auto current = pgn.curves_begin();
+//        auto end = pgn.curves_end();
+//        result.moveTo(CGAL::to_double(current->source().x()), CGAL::to_double(current->source().y()));
+//        do {
+//            const auto& curve = *current;
+//            const auto& source = curve.source();
+//            const auto& target = curve.target();
+//            if (curve.is_linear()) {
+//                result.lineTo(QPointF(CGAL::to_double(target.x()), CGAL::to_double(target.y())));
+//            } else if (curve.is_circular()) {
+//                const QRectF rect(toQRectF(curve.supporting_circle().bbox()));
+//                const auto center = curve.supporting_circle().center();
+//                const double asource = qAtan2(CGAL::to_double(source.y() - center.y()), CGAL::to_double(source.x() - center.x()));
+//                const double atarget = qAtan2(CGAL::to_double(target.y() - center.y()), CGAL::to_double(target.x() - center.x()));
+//                double aspan = atarget - asource;
+//                if (aspan < -CGAL_PI || (qFuzzyCompare(aspan, -CGAL_PI) && !isClockwise))
+//                    aspan += 2.0 * CGAL_PI;
+//                else if (aspan > CGAL_PI || (qFuzzyCompare(aspan, CGAL_PI) && isClockwise))
+//                    aspan -= 2.0 * CGAL_PI;
+//                result.arcTo(rect, qRadiansToDegrees(-asource), qRadiansToDegrees(-aspan));
+//            } else { // ?!?
+//                Q_UNREACHABLE();
+//            }
+//        } while (++current != end);
+//        result.lineTo(CGAL::to_double(pgn.curves_begin()->source().x()), CGAL::to_double(pgn.curves_begin()->source().y()));
+//    }
+//    return result;
+//}
+
 extern QGraphicsScene* scene;
 
 class ArcItem final : public QGraphicsItem {
     QPainterPath path;
-    QPainterPath path1;
     const LWPOLYLINE* lwpl;
     QColor color;
-    double aAngle;
-    double bAngle;
+
     double radius;
-    QPointF o;
 
-    qreal angle(QPointF pt1, QPointF pt2) const
-    {
-        const qreal dx = pt2.x() - pt1.x();
-        const qreal dy = pt2.y() - pt1.y();
-        const qreal theta = qRadiansToDegrees(qAtan2(dy, -dx));
-        const qreal theta_normalized = theta < 0 ? theta + 360 : theta;
-        if (qFuzzyCompare(theta_normalized, qreal(360)))
-            return qreal(0);
-        else
-            return theta_normalized;
-    }
-
-    void addSeg(LWPOLYLINE::Segment a, LWPOLYLINE::Segment b)
+    void addSeg(LWPOLYLINE::Segment source, LWPOLYLINE::Segment target)
     {
         if (path.isEmpty())
-            path.moveTo(a);
+            path.moveTo(source);
 
-        if (qFuzzyIsNull(a.bulge)) {
-            path.lineTo(b);
+        if (qFuzzyIsNull(source.bulge)) {
+            path.lineTo(target);
             return;
         }
-        return;
 
-        const QLineF l1(a, b);
+        const QLineF l1(source, target);
         const double lenght = l1.length() * 0.5;
-        const double height = lenght * a.bulge;
+        const double height = lenght * source.bulge;
+        qDebug() << "bulge" << source.bulge;
         radius = (height * height + lenght * lenght) / (height * 2);
-        QLineF l2(l1.center(), b);
+        QLineF l2((source + target) / 2, target);
         l2 = l2.normalVector();
         l2.setLength(height);
 
         QPointF c(l2.p2());
-
+        QPointF center;
         {
-            double ax2 = a.x() * a.x();
-            double bx2 = b.x() * b.x();
+            double ax2 = source.x() * source.x();
+            double bx2 = target.x() * target.x();
             double cx2 = c.x() * c.x();
 
-            double ay2 = a.y() * a.y();
-            double by2 = b.y() * b.y();
+            double ay2 = source.y() * source.y();
+            double by2 = target.y() * target.y();
             double cy2 = c.y() * c.y();
-            double D = a.x() * b.y() + a.y() * c.x() - b.y() * c.x() - a.x() * c.y() - b.x() * a.y() + b.x() * c.y();
 
-            o.rx() = +0.5 / D * ( //
-                         a.y() * cx2 + a.y() * cy2 + b.y() * ax2 + b.y() * ay2 + c.y() * bx2 + c.y() * by2 - //
-                         a.y() * bx2 - a.y() * by2 - b.y() * cx2 - b.y() * cy2 - c.y() * ax2 - c.y() * ay2);
-            o.ry() = -0.5 / D * ( //
-                         a.x() * cx2 + a.x() * cy2 + b.x() * ax2 + b.x() * ay2 + c.x() * bx2 + c.x() * by2 - //
-                         a.x() * bx2 - a.x() * by2 - b.x() * cx2 - b.x() * cy2 - c.x() * ax2 - c.x() * ay2);
+            double d = source.x() * target.y() + source.y() * c.x() - target.y() * c.x() - source.x() * c.y() - target.x() * source.y() + target.x() * c.y();
+
+            center = QPointF(
+                +0.5 / d * ( //
+                    source.y() * cx2 + source.y() * cy2 + target.y() * ax2 + target.y() * ay2 + c.y() * bx2 + c.y() * by2 - //
+                    source.y() * bx2 - source.y() * by2 - target.y() * cx2 - target.y() * cy2 - c.y() * ax2 - c.y() * ay2),
+                -0.5 / d * ( //
+                    source.x() * cx2 + source.x() * cy2 + target.x() * ax2 + target.x() * ay2 + c.x() * bx2 + c.x() * by2 - //
+                    source.x() * bx2 - source.x() * by2 - target.x() * cx2 - target.x() * cy2 - c.x() * ax2 - c.x() * ay2));
         }
 
-        //path.addEllipse(QRectF(o - QPointF(0.1, 0.1), o + QPointF(0.1, 0.1))); ///////dbg
+        QRectF br(center + QPointF(radius, radius), center - QPointF(radius, radius));
 
-        path1.moveTo(a);
-        path1.lineTo(b);
-        path1.lineTo(c);
-        path1.lineTo(a);
+        //        aAngle = angle(center, source);
+        //        bAngle = angle(center, target);
+        const double aSource = qRadiansToDegrees(qAtan2(center.y() - source.y(), center.x() - source.x()));
+        const double aTarget = qRadiansToDegrees(qAtan2(center.y() - target.y(), center.x() - target.x()));
+        double aSpan = aTarget - aSource;
 
-        path1.addEllipse(QRectF(c - QPointF(0.1, 0.1), c + QPointF(0.1, 0.1))); ///////dbg
-
-        QRectF br(o + QPointF(radius, radius), o - QPointF(radius, radius));
-
-        aAngle = angle(o, a);
-        bAngle = angle(o, b);
+        if (aSpan < -180 || (qFuzzyCompare(aSpan, -180) && !(aTarget > aSource)))
+            aSpan += 360;
+        else if (aSpan > 180 || (qFuzzyCompare(aSpan, 180) && (aTarget > aSource)))
+            aSpan -= 360;
 
         if (lwpl->polylineFlag == LWPOLYLINE::Closed) {
-            double angle = bAngle - aAngle;
-            if (angle < 0)
-                angle += 360;
-            if (aAngle < 0 || bAngle < 0)
-                return;
-            //path.moveTo(b);
-            path.arcTo(br, aAngle, angle);
-            path.arcTo(br, bAngle, angle);
+            path.arcTo(br, -aSource, -aSpan);
+            path.arcTo(br, -aTarget, -aSpan);
         } else {
-            qDebug() << "\nA" << aAngle
-                     << "\nB" << bAngle;
-            do {
-                double angle = bAngle - aAngle;
-                qDebug() << "A1" << angle;
-                if (angle < 0)
-                    angle += 360;
-                if (aAngle < 0 || bAngle < 0)
-                    break;
-                //path.moveTo(b);
-                path.arcTo(br, bAngle, angle - 360);
-                qDebug() << "A1" << (angle - 360);
-            } while (0);
+            qDebug() << "\tsize" << lwpl->poly.size();
+            qDebug() << "1" << aSource << "2" << aTarget;
+#ifdef QT_DEBUG
+            path.lineTo(target);
+#else
+            path.arcTo(br, -aSource, -aSpan);
+#endif
         }
     }
 
@@ -129,18 +179,6 @@ public:
         painter->setPen(QPen(color, lwpl->constantWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         painter->setBrush(Qt::NoBrush);
         painter->drawPath(path);
-
-        painter->setPen(QPen(Qt::blue /*color*/, 0.0 /*lwpl->constantWidth*/, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        painter->setBrush(Qt::NoBrush);
-        painter->drawPath(path1);
-
-        return;
-        auto p = path.toSubpathPolygons(matrix());
-        //        p.removeFirst();
-        //        p.removeLast();
-        if (p.size())
-            painter->drawPolyline(p.first());
-        //painter->drawArc(QRectF(o + QPointF(rad, rad), o - QPointF(rad, rad)), aAngle * 16, bAngle * 16);
     }
 };
 
@@ -152,7 +190,6 @@ LWPOLYLINE::LWPOLYLINE(SectionParser* sp)
 void LWPOLYLINE::draw(const INSERT_ET* const i) const
 {
     if (i) {
-        //        if (bulge != 0.0) {
         for (int r = 0; r < i->rowCount; ++r) {
             for (int c = 0; c < i->colCount; ++c) {
                 QPointF tr(r * i->rowSpacing, r * i->colSpacing);
@@ -164,26 +201,10 @@ void LWPOLYLINE::draw(const INSERT_ET* const i) const
                 i->attachToLayer(item);
             }
         }
-        //        } else {
-        //        for (int r = 0; r < i->rowCount; ++r) {
-        //            for (int c = 0; c < i->colCount; ++c) {
-        //                QPointF tr(r * i->rowSpacing, r * i->colSpacing);
-        //                auto item = scene->addPolygon(poly, QPen(i->color(), constantWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush);
-        //                item->setToolTip(layerName);
-        //                i->transform(item, tr);
-        //                i->attachToLayer(item);
-        //            }
-        //        }
-        //        }
     } else {
-        //        if (bulge != 0.0) {
-        //            //        return;
         auto item = new ArcItem(this, color());
         scene->addItem(item);
         attachToLayer(item);
-        //        } else {
-        //            attachToLayer(scene->addPolygon(poly, QPen(color(), constantWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin), Qt::NoBrush));
-        //        }
     }
 }
 
@@ -239,5 +260,4 @@ void LWPOLYLINE::parse(CodeData& code)
         }
         code = sp->nextCode();
     } while (code.code() != 0);
-    qDebug() << poly.size();
 }

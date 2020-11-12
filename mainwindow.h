@@ -14,6 +14,7 @@ class MainWindow : public QMainWindow {
 
 public:
     MainWindow(QWidget* parent = nullptr);
+    MainWindow(QStringView file ,QWidget* parent = nullptr);
     ~MainWindow();
 
 private slots:

@@ -1,17 +1,17 @@
 #ifndef LAYERMODEL_H
 #define LAYERMODEL_H
 
+#include "layer.h"
 #include <QAbstractTableModel>
-struct LAYER;
 
 class LayerModel : public QAbstractTableModel {
     Q_OBJECT
 
-    QMap<QString, LAYER*> layers;
+    Layers layers;
     const QStringList names;
 
 public:
-    explicit LayerModel(QMap<QString, LAYER*> layers, QObject* parent = nullptr);
+    explicit LayerModel(Layers layers, QObject* parent = nullptr);
 
 signals:
 

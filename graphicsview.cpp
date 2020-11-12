@@ -186,7 +186,7 @@ void GraphicsView::dropEvent(QDropEvent* event)
     for (QUrl& url : event->mimeData()->urls()) {
         if (url.path().endsWith(".dxf", Qt::CaseInsensitive)) {
             emit fileDroped(url.path().remove(0, 1));
-            break;
+//            break;
         }
     }
     event->acceptProposedAction();

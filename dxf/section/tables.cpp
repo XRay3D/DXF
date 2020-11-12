@@ -3,7 +3,7 @@
 
 #include <tables/tableitem.h>
 
-SectionTABLES::SectionTABLES(QMap<QString, LAYER*>& layers, QVector<CodeData>&& data)
+SectionTABLES::SectionTABLES(Layers& layers, QVector<CodeData>&& data)
     : SectionParser(std::move(data))
     , layers(layers)
 {

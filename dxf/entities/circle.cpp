@@ -28,7 +28,7 @@ void CIRCLE::draw(const INSERT_ET* const i) const
     } else {
         QPointF r(radius, radius);
         attachToLayer(scene->addEllipse(QRectF(centerPoint - r, centerPoint + r),
-            QPen(i->color(), thickness /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush));
+            QPen(color(), thickness /*, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin*/), Qt::NoBrush));
     }
 }
 

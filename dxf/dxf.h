@@ -13,6 +13,7 @@
 
 struct SectionParser;
 struct LAYER;
+using Layers = std::map<QString, LAYER*>;
 
 class DxfFile : public QObject {
     Q_OBJECT
@@ -20,9 +21,8 @@ public:
     explicit DxfFile(QObject* parent = nullptr);
     ~DxfFile();
     bool read(const QString& fileName);
-    static LAYER* layer(const QString& name) { return self->layers.value(name, nullptr); }
-
-    QMap<QString, LAYER*> layers;
+    static LAYER* layer(const QString& name);
+    Layers layers;
 
 private:
     int ctr = 0;

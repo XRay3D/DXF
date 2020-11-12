@@ -32,7 +32,7 @@ bool DxfFile::read(const QString& fileName)
     do {
         codes.append({ in.readLine().toInt(), in.readLine(), ctr });
         ctr += 2;
-        qDebug() << codes.last();
+        //        qDebug() << codes.last();
         if (codes.last() == "ENDSEC") {
             int bsec = 0;
             while (codes[bsec++] != "SECTION" && bsec < codes.size())
@@ -69,8 +69,15 @@ bool DxfFile::read(const QString& fileName)
     } while (!in.atEnd() || codes.last() != "EOF");
 
     file.close();
-    for (SectionParser* s : sections) {
+    for (SectionParser* s : qAsConst(sections)) {
         qDebug() << (*s);
     }
     return true;
+}
+
+LAYER* DxfFile::layer(const QString& name)
+{
+    if (self->layers.find(name) != self->layers.end())
+        return self->layers[name];
+    return nullptr;
 }

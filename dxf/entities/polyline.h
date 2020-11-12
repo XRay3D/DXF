@@ -1,5 +1,8 @@
 #pragma once
+
 #include "entity.h"
+#include <QPolygonF>
+
 struct POLYLINE final : Entity {
     POLYLINE(SectionParser* sp);
 
@@ -41,4 +44,7 @@ public:
         ExtrDirY = 220, //Файл DXF: значения Y и Z для направления выдавливания (необязательно)
         ExtrDirZ = 230,
     };
+    QPolygonF poly;
+    double startWidth = 0.0;
+    double endWidth = 0.0;
 };

@@ -4,13 +4,23 @@ DESTDIR = $$_PRO_FILE_PWD_/bin
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++17 #console
+#CONFIG += c++17 #console
+
+msvc* {
+#    LIBS += -lsetupapi -lAdvapi32
+#    RC_FILE = myapp.rc
+#    TARGET = $$TARGET"_msvc"
+#    QMAKE_CXXFLAGS -= /std:c++17
+    QMAKE_CXXFLAGS += /std:c++latest
+    message($$TARGET)
+}
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += _USE_MATH_DEFINES
 
 # You can also make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
